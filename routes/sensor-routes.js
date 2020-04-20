@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Sensor = require("../models/sensor-model");
+const nodeailer = require("nodemailer");
+require("dotenv").config();
 
 router.post("/sensor", (req, res, next) => {
   Sensor.create(req.body)
@@ -16,6 +18,37 @@ router.put("/sensor/:id", (req, res, next) => {
     { $set: req.body },
     { new: true },
     (error, doc) => {
+      if (doc.smokeLevel > 5) {
+        let transporter = nodeailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "ayeshlak1998@gmail.com",
+            pass: process.env.PASSWORD,
+          },
+        });
+
+        let info = {
+          from: '"Sensor Alerts 💥🔥" ayeshlak1998@gmail.com',
+          to: "aruniprashani@gmail.com",
+          subject: "SmokeLevel Increased",
+          text: "SmokeLevel",
+        };
+
+        transporter.sendMail(info, (err, data) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("sent");
+          }
+        });
+
+        console.log(doc.smokeLevel);
+      } else if (doc.co2Level > 5) {
+        console.log(doc.co2Level);
+      } else if (doc.co2Level > 5 && doc.smokeLevel > 5) {
+        console.log(doc.co2Level);
+      }
+
       res.send(doc);
     }
   );
@@ -47,18 +80,6 @@ router.get("/sensor/:id", (req, res, next) => {
 
 router.delete("/sensor/:id", (req, res, next) => {
   Sensor.deleteOne({ id: req.params.id }, (err, result) => {
-    // if (err) {
-    //   res.send(err);
-    //   // res.json({
-    //   //   error: `error ${err}`,
-    //   // });
-    // } else {
-    //   res.send(result);
-    //   // res.json({
-    //   //   message: `deleted ${req.params.id}`,
-    //   // });
-    // }
-
     if (result.deletedCount) {
       res.json({
         message: `deleted ${req.params.id}`,
