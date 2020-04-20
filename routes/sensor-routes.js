@@ -42,6 +42,8 @@ router.put("/sensor/:id", (req, res, next) => {
           }
         });
 
+        console.log("message has been sent to 077465521");
+
         console.log(doc.co2Level);
       } else if (doc.co2Level > 5) {
         let info = {
@@ -59,6 +61,8 @@ router.put("/sensor/:id", (req, res, next) => {
           }
         });
 
+        console.log("message has been sent to 077465521");
+
         console.log(doc.co2Level);
       } else if (doc.smokeLevel > 5) {
         let info = {
@@ -75,6 +79,8 @@ router.put("/sensor/:id", (req, res, next) => {
             console.log("sent");
           }
         });
+
+        console.log("message has been sent to 077465521");
 
         console.log(doc.smokeLevel);
       }
