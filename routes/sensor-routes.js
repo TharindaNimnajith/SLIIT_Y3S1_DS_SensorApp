@@ -45,4 +45,30 @@ router.get("/sensor/:id", (req, res, next) => {
   }).catch(next);
 });
 
+router.delete("/sensor/:id", (req, res, next) => {
+  Sensor.deleteOne({ id: req.params.id }, (err, result) => {
+    // if (err) {
+    //   res.send(err);
+    //   // res.json({
+    //   //   error: `error ${err}`,
+    //   // });
+    // } else {
+    //   res.send(result);
+    //   // res.json({
+    //   //   message: `deleted ${req.params.id}`,
+    //   // });
+    // }
+
+    if (result.deletedCount) {
+      res.json({
+        message: `deleted ${req.params.id}`,
+      });
+    } else {
+      res.json({
+        message: `deleted failed ${req.params.id}`,
+      });
+    }
+  }).catch(next);
+});
+
 module.exports = router;
