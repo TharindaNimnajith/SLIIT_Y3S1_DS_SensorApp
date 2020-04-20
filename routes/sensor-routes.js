@@ -21,4 +21,16 @@ router.put("/sensor/:id", (req, res, next) => {
   );
 });
 
+router.get("/sensor", (req, res, next) => {
+  Sensor.find({}, (err, sensors) => {
+    var sensorMap = {};
+
+    sensors.forEach((sensor) => {
+      sensorMap[sensor.id] = sensor;
+    });
+
+    res.send(sensorMap);
+  }).catch(next);
+});
+
 module.exports = router;
