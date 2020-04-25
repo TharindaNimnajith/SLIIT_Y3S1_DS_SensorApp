@@ -1,10 +1,12 @@
 package com.interfaces;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -31,6 +33,8 @@ public class LoginUI extends JFrame {
 	private JTextField txtUsername;
 	private JPasswordField txtPassword;
 	private JLabel lblUserNotify;
+
+	static int status = 0;
 
 	public LoginUI() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
 		Image img1 = new ImageIcon(this.getClass().getResource("/04.png")).getImage();
@@ -66,6 +70,7 @@ public class LoginUI extends JFrame {
 		btnLogin.setBackground(new Color(210, 105, 30));
 		btnLogin.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnLogin.setFocusable(false);
 		btnLogin.setBounds(285, 298, 144, 54);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,6 +88,7 @@ public class LoginUI extends JFrame {
 						txtPassword.setText(null);
 						JOptionPane.showMessageDialog(null, "Logged in sucessfully.");
 						frmLoginSystem.dispose();
+						disposeFrame();
 						ManageSensorUI manageSensorUI = new ManageSensorUI();
 						manageSensorUI.setVisible(true);
 					} else {
@@ -105,10 +111,15 @@ public class LoginUI extends JFrame {
 		btnReset.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		btnReset.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnReset.setBounds(114, 310, 120, 35);
+		btnReset.setFocusable(false);
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				txtUsername.setText(null);
-				txtPassword.setText(null);
+				int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?", "Reset Data",
+						JOptionPane.YES_NO_OPTION);
+				if (action == 0) {
+					txtUsername.setText(null);
+					txtPassword.setText(null);
+				}
 			}
 		});
 		frmLoginSystem.getContentPane().add(btnReset);
@@ -119,6 +130,7 @@ public class LoginUI extends JFrame {
 		btnExit.setBackground(new Color(139, 0, 0));
 		btnExit.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnExit.setFocusable(false);
 		btnExit.setBounds(474, 310, 120, 35);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -207,12 +219,24 @@ public class LoginUI extends JFrame {
 		window.frmLoginSystem.setVisible(true);
 	}
 
+	public void disposeFrame() {
+		super.dispose();
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginUI window = new LoginUI();
-					window.frmLoginSystem.setVisible(true);
+					SensorDetailsUI frame = new SensorDetailsUI();
+					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
+							dim.height / 2 - frame.getSize().height / 2);
+					frame.setVisible(true);
+					if (status == 1) {
+						JOptionPane.showMessageDialog(null,
+								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+								JOptionPane.WARNING_MESSAGE);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

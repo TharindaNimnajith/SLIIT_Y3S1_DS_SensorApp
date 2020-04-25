@@ -41,6 +41,7 @@ public class SensorDetailsUI extends JFrame {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);
+		setResizable(false);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,6 +113,23 @@ public class SensorDetailsUI extends JFrame {
 		btnLogin.setForeground(new Color(0, 0, 0));
 		btnLogin.setBackground(new Color(204, 204, 204));
 		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnLogin.setFocusable(false);
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (JOptionPane.showConfirmDialog(null,
+							"Confirm if you really want to navigate to the login window.",
+							"Login window navigation confirmation",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						LoginUI loginUI = new LoginUI();
+						loginUI.displayFrame();
+						disposeFrame();
+					}
+				} catch (Exception e1) {
+					System.out.println(e1);
+				}
+			}
+		});
 		panel.add(btnLogin);
 
 		JLabel lblTopic = new JLabel("Sensor Details");
@@ -120,17 +138,6 @@ public class SensorDetailsUI extends JFrame {
 		lblTopic.setForeground(SystemColor.textHighlightText);
 		lblTopic.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTopic.setFont(new Font("Showcard Gothic", Font.BOLD, 30));
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					LoginUI loginUI = new LoginUI();
-					loginUI.displayFrame();
-					disposeFrame();
-				} catch (Exception e1) {
-					System.out.println(e1);
-				}
-			}
-		});
 		panel.add(lblTopic);
 	}
 
