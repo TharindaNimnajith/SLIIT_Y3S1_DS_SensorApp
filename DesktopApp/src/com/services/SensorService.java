@@ -1,6 +1,7 @@
 package com.services;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -95,7 +96,7 @@ public class SensorService implements ISensorService {
 	@Override
 	public void updateSensor(String sensorId, Sensor sensor) throws Exception {
 		
-		String url="http://localhost:5000/api/sensor/";
+		String url="http://localhost:5000/api/sensor/" + sensorId;
 		URL object=new URL(url);
 
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -103,7 +104,7 @@ public class SensorService implements ISensorService {
 		con.setDoInput(true);
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setRequestProperty("Accept", "application/json");
-		con.setRequestMethod("POST");
+		con.setRequestMethod("PUT");
 
 		JSONObject obj   = new JSONObject();
 		
@@ -139,12 +140,42 @@ public class SensorService implements ISensorService {
 	}
 
 	@Override
-	public void removeSensor(String sensorId) {
-//		for (Sensor sensor : sensors) {
-//			if (sensor.getSensorId().equals(sensorId)) {
-//				sensors.remove(sensor);
-//			}
-//		}
+	public void removeSensor(String sensorId) throws Exception {
+
+		String url="http://localhost:5000/api/sensor/" + sensorId;
+		URL object=new URL(url);
+
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+//		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("DELETE");
+
+		
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		
+		
+		wr.flush();
+
+		//display what returns the POST request
+
+		StringBuilder sb = new StringBuilder();  
+		int HttpResult = con.getResponseCode(); 
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+		    BufferedReader br = new BufferedReader(
+		            new InputStreamReader(con.getInputStream(), "utf-8"));
+		    String line = null;  
+		    while ((line = br.readLine()) != null) {  
+		        sb.append(line + "\n");  
+		    }
+		    br.close();
+		    System.out.println("" + sb.toString());  
+		} else {
+		    System.out.println(con.getResponseMessage() + " eror");  
+		} 
+		
 	}
 
 	@Override

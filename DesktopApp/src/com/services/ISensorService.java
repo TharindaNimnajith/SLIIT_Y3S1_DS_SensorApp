@@ -14,7 +14,7 @@ public interface ISensorService {
 
 	public void updateSensor(String sensorId, Sensor sensor) throws Exception;
 
-	public void removeSensor(String sensorId);
+	public void removeSensor(String sensorId) throws Exception;
 
 	public Sensor getSensor(String sensorId) throws  Exception;
 
