@@ -8,7 +8,7 @@
 08. Active attribute handling in ManageSensorUI
 09. Red color rows in SensorDetailsUI JTable for relevant sensors
 10. Sensor ID problem - remove from middle and add not next id
-11. Validate id field for insert and update in desktop client
+11. Validate id field for insert and update in desktop client - status codes
 12. Sensor App - dummy values from sensors
 13. SMS
 14. Email & SMS from RMI JMS?
@@ -17,4 +17,9 @@
 17. Testing
 18. Report
 19. Youtube video
-20. Refer to deliverables in assignment2.docx
+20. Refer to deliverables and requirements completion in assignment2.docx
+21. Update and click on another row in the table - error
+22. Validation when inserting and updating - room + floor - warning message
+23. JSON Object to array
+24. Git merge
+25. 

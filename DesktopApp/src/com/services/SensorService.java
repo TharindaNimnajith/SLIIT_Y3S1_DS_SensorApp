@@ -1,6 +1,7 @@
 package com.services;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -15,7 +16,7 @@ import com.models.Sensor;
 public class SensorService implements ISensorService {
 
 	@Override
-	public void addSensor(Sensor sensor) throws Exception {
+	public void addSensor(Sensor sensor) throws IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL object = new URL(url);
 
@@ -47,14 +48,11 @@ public class SensorService implements ISensorService {
 				sb.append(line + "\n");
 			}
 			br.close();
-			System.out.println("" + sb.toString());
-		} else {
-			System.out.println(con.getResponseMessage() + " eror");
 		}
 	}
 
 	@Override
-	public void updateSensor(String sensorId, Sensor sensor) throws Exception {
+	public void updateSensor(String sensorId, Sensor sensor) throws IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
 		URL object = new URL(url);
 
@@ -86,14 +84,11 @@ public class SensorService implements ISensorService {
 				sb.append(line + "\n");
 			}
 			br.close();
-			System.out.println("" + sb.toString());
-		} else {
-			System.out.println(con.getResponseMessage() + " eror");
 		}
 	}
 
 	@Override
-	public void removeSensor(String sensorId) throws Exception {
+	public void removeSensor(String sensorId) throws IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
 		URL object = new URL(url);
 
@@ -115,14 +110,11 @@ public class SensorService implements ISensorService {
 				sb.append(line + "\n");
 			}
 			br.close();
-			System.out.println("" + sb.toString());
-		} else {
-			System.out.println(con.getResponseMessage() + " eror");
 		}
 	}
 
 	@Override
-	public Sensor getSensor(String sensorId) throws Exception {
+	public Sensor getSensor(String sensorId) throws IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
 		URL seatURL = new URL(url);
 
@@ -149,7 +141,7 @@ public class SensorService implements ISensorService {
 	}
 
 	@Override
-	public ArrayList<Sensor> getSensorsList() throws Exception {
+	public ArrayList<Sensor> getSensorsList() throws IOException {
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 		String url = "http://localhost:5000/api/sensor/";
 		URL seatURL = new URL(url);

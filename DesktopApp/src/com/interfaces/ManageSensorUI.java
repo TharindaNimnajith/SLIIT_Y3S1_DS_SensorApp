@@ -13,6 +13,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -31,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import org.json.JSONException;
 
 import com.models.Sensor;
 import com.services.ISensorService;
@@ -53,7 +57,7 @@ public class ManageSensorUI extends JFrame {
 
 	static int status = 0;
 
-	public ManageSensorUI() throws Exception {
+	public ManageSensorUI() throws IOException {
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -107,7 +111,7 @@ public class ManageSensorUI extends JFrame {
 						}
 					}
 				} catch (Exception e1) {
-					System.out.println(e1);
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -165,12 +169,12 @@ public class ManageSensorUI extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
-					System.out.println(e1);
+					e1.printStackTrace();
 				} finally {
 					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e1) {
+					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -212,7 +216,7 @@ public class ManageSensorUI extends JFrame {
 					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e1) {
+					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -249,7 +253,7 @@ public class ManageSensorUI extends JFrame {
 					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e) {
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
@@ -386,10 +390,13 @@ public class ManageSensorUI extends JFrame {
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?", "Reset Data",
-							JOptionPane.YES_NO_OPTION);
-					if (action == 0) {
-						resetFields();
+					if (!txtSensorId.getText().isEmpty() || !txtSensorName.getText().isEmpty()
+							|| !txtFloorNo.getText().isEmpty() || !txtRoomNo.getText().isEmpty()) {
+						int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?",
+								"Reset Data", JOptionPane.YES_NO_OPTION);
+						if (action == 0) {
+							resetFields();
+						}
 					}
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e);
@@ -401,7 +408,7 @@ public class ManageSensorUI extends JFrame {
 		displayTable();
 	}
 
-	public ArrayList<Sensor> refreshTable() throws Exception {
+	public ArrayList<Sensor> refreshTable() throws IOException {
 		sensorsList = iSensorService.getSensorsList();
 		return sensorsList;
 	}
@@ -410,7 +417,7 @@ public class ManageSensorUI extends JFrame {
 		super.dispose();
 	}
 
-	public void displayTable() throws Exception {
+	public void displayTable() throws IOException {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(255, 255, 255));
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));
@@ -503,6 +510,15 @@ public class ManageSensorUI extends JFrame {
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
+				} catch (ConnectException e) {
+					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
+							"WARNING!", JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
+				} catch (JSONException e) {
+					JOptionPane.showMessageDialog(null,
+							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
+							JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

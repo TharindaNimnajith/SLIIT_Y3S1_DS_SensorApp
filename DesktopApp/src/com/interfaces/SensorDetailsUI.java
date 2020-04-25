@@ -9,6 +9,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -26,6 +28,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.json.JSONException;
+
 import com.models.Sensor;
 import com.services.ISensorService;
 import com.services.SensorService;
@@ -37,7 +41,7 @@ public class SensorDetailsUI extends JFrame {
 	private JPanel contentPane;
 	static int status = 0;
 
-	public SensorDetailsUI() throws Exception {
+	public SensorDetailsUI() throws IOException {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);
@@ -126,7 +130,7 @@ public class SensorDetailsUI extends JFrame {
 						disposeFrame();
 					}
 				} catch (Exception e1) {
-					System.out.println(e1);
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -141,7 +145,7 @@ public class SensorDetailsUI extends JFrame {
 		panel.add(lblTopic);
 	}
 
-	public ArrayList<Sensor> refreshTable() throws Exception {
+	public ArrayList<Sensor> refreshTable() throws IOException {
 		ISensorService iSensorService = (ISensorService) new SensorService();
 		ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 		sensorsList = iSensorService.getSensorsList();
@@ -166,6 +170,15 @@ public class SensorDetailsUI extends JFrame {
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
+				} catch (ConnectException e) {
+					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
+							"WARNING!", JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
+				} catch (JSONException e) {
+					JOptionPane.showMessageDialog(null,
+							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
+							JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
