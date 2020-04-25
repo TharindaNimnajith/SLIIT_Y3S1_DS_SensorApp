@@ -8,21 +8,25 @@ import java.rmi.RemoteException;
 public class SensorClient {
 	
 	public static void main(String[] args) {
-        System.setProperty("java.security.policy", "file:allowall.policy");
-        SensorService service = null;
-        try {
-            service = (SensorService) Naming.lookup("//localhost/SensorService");
-            System.out.println("Clients: " + service.increment());
-            System.out.println("Add : " + service.add(2, 2));
-            System.out.println("Subtract : " + service.subtract(5, 2));
-            System.out.println("Multiply : " + service.multiply(2, 6));
-            System.out.println("Divide : " + service.divide(4, 2));
-        } catch (NotBoundException ex) {
-            System.err.println(ex.getMessage());
-        } catch (MalformedURLException ex) {
-            System.err.println(ex.getMessage());
-        } catch (RemoteException ex) {
-            System.err.println(ex.getMessage());
-        }
-    }
+		System.setProperty("java.security.policy", "file:allowall.policy");
+		SensorService sensorService = null;
+		try {
+			sensorService = (SensorService) Naming.lookup("//localhost/SensorService");
+			sensorService.increment();
+			sensorService.insertSensor();
+			sensorService.updateSensor();
+			sensorService.deleteSensor();
+			sensorService.getSensor();
+			sensorService.getAllSensors();
+			sensorService.getActiveSensors();
+		} catch (NotBoundException notBoundException) {
+			System.err.println(notBoundException.getMessage());
+		} catch (MalformedURLException malformedURLException) {
+			System.err.println(malformedURLException.getMessage());
+		} catch (RemoteException remoteException) {
+			System.err.println(remoteException.getMessage());
+		} catch (Exception exception) {
+			System.err.println(exception.getMessage());
+		}
+	}
 }

@@ -1,12 +1,14 @@
 package com.services;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import com.models.Sensor;
 
 public interface ISensorService {
 
-	public void addSensor(Sensor sensor);
+	public void addSensor(Sensor sensor) throws RemoteException, NotBoundException;
 
 	public void updateSensor(String sensorId, Sensor sensor);
 
