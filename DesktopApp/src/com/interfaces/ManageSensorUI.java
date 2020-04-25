@@ -53,7 +53,7 @@ public class ManageSensorUI extends JFrame {
 	private ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 
 	public ManageSensorUI()
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+			throws Exception {
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -185,7 +185,12 @@ public class ManageSensorUI extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
 					resetFields();
-					displayTable();
+					try {
+						displayTable();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -217,7 +222,12 @@ public class ManageSensorUI extends JFrame {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "WARNING!", JOptionPane.ERROR_MESSAGE);
 				} finally {
 					resetFields();
-					displayTable();
+					try {
+						displayTable();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -361,7 +371,7 @@ public class ManageSensorUI extends JFrame {
 		displayTable();
 	}
 
-	public ArrayList<Sensor> refreshTable() {
+	public ArrayList<Sensor> refreshTable() throws Exception {
 		sensorsList = iSensorService.getSensorsList();
 		return sensorsList;
 	}
@@ -370,7 +380,7 @@ public class ManageSensorUI extends JFrame {
 		super.dispose();
 	}
 
-	public void displayTable() {
+	public void displayTable() throws Exception {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(255, 255, 255));
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));

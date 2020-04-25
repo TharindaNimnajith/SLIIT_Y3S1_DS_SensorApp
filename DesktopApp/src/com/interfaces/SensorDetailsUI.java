@@ -39,7 +39,7 @@ public class SensorDetailsUI extends JFrame {
 	static int status = 0;
 
 	public SensorDetailsUI()
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+			throws Exception {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);
@@ -136,7 +136,7 @@ public class SensorDetailsUI extends JFrame {
 		panel.add(lblTopic);
 	}
 
-	public ArrayList<Sensor> refreshTable() {
+	public ArrayList<Sensor> refreshTable() throws Exception {
 		ISensorService iSensorService = (ISensorService) new SensorService();
 		ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 		sensorsList = iSensorService.getSensorsList();
