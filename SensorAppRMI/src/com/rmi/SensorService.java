@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 public interface SensorService extends Remote {
 
-	public int getAllSensors(int a, int b) throws RemoteException;
+	public int add(int a, int b) throws RemoteException;
 
 	public int subtract(int a, int b) throws RemoteException;
 
