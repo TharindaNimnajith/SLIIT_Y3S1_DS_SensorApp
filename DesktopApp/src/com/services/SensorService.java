@@ -94,22 +94,11 @@ public class SensorService implements ISensorService {
 
 			return s1;
 
-		
-		
 	}
 
 	@Override
 	public ArrayList<Sensor> getSensorsList() throws Exception {
 		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-//		Sensor sensor = new Sensor("1", "ABC", 12, 13, 1, 6, true);
-//		Sensor sensor1 = new Sensor("2", "ABC", 15, 13, 1, 1, true);
-//		Sensor sensor2 = new Sensor("3", "ABC", 12, 17, 10, 1, true);
-//		Sensor sensor3 = new Sensor("4", "ABC", 12, 13, 1, 2, true);
-//		sensors.add(sensor);
-//		sensors.add(sensor1);
-//		sensors.add(sensor2);
-//		sensors.add(sensor3);
-
 		String url = "http://localhost:5000/api/sensor/";
 		URL seatURL = new URL(url);
 		// Return the JSON Response from the API
