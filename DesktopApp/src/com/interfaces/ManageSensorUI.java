@@ -152,13 +152,19 @@ public class ManageSensorUI extends JFrame {
 						iSensorService.addSensor(sensor);
 						JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
 						resetFields();
-						displayTable();
 					} else {
 						JOptionPane.showMessageDialog(null, "Fill all the fields and try again!", "Insert Error!",
 								JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
 					System.out.println(e1);
+				} finally {
+					try {
+						displayTable();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -271,7 +277,7 @@ public class ManageSensorUI extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String sensorId = txtSensorId.getText();
-				if (!sensorId.matches("[a-zA-Z1-9 ,]+") && !sensorId.isEmpty()) {
+				if (!sensorId.matches("[a-zA-Z0-9 ,]+") && !sensorId.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid sensor id with only letters and digits.");
 					txtSensorId.setText(null);
 				}
@@ -294,7 +300,7 @@ public class ManageSensorUI extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String sensorName = txtSensorName.getText();
-				if (!sensorName.matches("[a-zA-Z1-9 ,]+") && !sensorName.isEmpty()) {
+				if (!sensorName.matches("[a-zA-Z0-9 ,]+") && !sensorName.isEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							"Please enter a valid sensor name with only letters and digits.");
 					txtSensorName.setText(null);
@@ -324,7 +330,7 @@ public class ManageSensorUI extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String roomNo = txtRoomNo.getText();
-				if (!roomNo.matches("[1-9 ,]+") && !roomNo.isEmpty()) {
+				if (!roomNo.matches("[0-9 ,]+") && !roomNo.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid room number.");
 					txtRoomNo.setText(null);
 				}
@@ -343,7 +349,7 @@ public class ManageSensorUI extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String floorNo = txtFloorNo.getText();
-				if (!floorNo.matches("[1-9 ,]+") && !floorNo.isEmpty()) {
+				if (!floorNo.matches("[0-9 ,]+") && !floorNo.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid floor number.");
 					txtFloorNo.setText(null);
 				}

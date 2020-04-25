@@ -3,7 +3,9 @@ package com.services;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.rmi.NotBoundException;
@@ -46,12 +48,94 @@ public class SensorService implements ISensorService {
 //	    	JSONObject jsonObj = new JSONObject(line);
 //	    	System.out.println(jsonObj);
 //	    }
+		
+		String url="http://localhost:5000/api/sensor/";
+		URL object=new URL(url);
+
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("POST");
+
+		JSONObject obj   = new JSONObject();
+		
+		obj.put("smokeLevel", sensor.getSmokeLevel());
+		obj.put("co2Level", sensor.getCO2Level());
+		obj.put("id", sensor.getSensorId());
+		obj.put("floorNo", sensor.getFloorNo());
+		obj.put("name", sensor.getSensorName());
+		obj.put("roomNo", sensor.getRoomNo());
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		wr.write(obj.toString());
+		
+		wr.flush();
+
+		//display what returns the POST request
+
+		StringBuilder sb = new StringBuilder();  
+		int HttpResult = con.getResponseCode(); 
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+		    BufferedReader br = new BufferedReader(
+		            new InputStreamReader(con.getInputStream(), "utf-8"));
+		    String line = null;  
+		    while ((line = br.readLine()) != null) {  
+		        sb.append(line + "\n");  
+		    }
+		    br.close();
+		    System.out.println("" + sb.toString());  
+		} else {
+		    System.out.println(con.getResponseMessage() + " eror");  
+		}  
 
 	}
 
 	@Override
-	public void updateSensor(String sensorId, Sensor sensor) {
+	public void updateSensor(String sensorId, Sensor sensor) throws Exception {
+		
+		String url="http://localhost:5000/api/sensor/";
+		URL object=new URL(url);
 
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("POST");
+
+		JSONObject obj   = new JSONObject();
+		
+		obj.put("smokeLevel", sensor.getSmokeLevel());
+		obj.put("co2Level", sensor.getCO2Level());
+		obj.put("id", sensor.getSensorId());
+		obj.put("floorNo", sensor.getFloorNo());
+		obj.put("name", sensor.getSensorName());
+		obj.put("roomNo", sensor.getRoomNo());
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		wr.write(obj.toString());
+		
+		wr.flush();
+
+		//display what returns the POST request
+
+		StringBuilder sb = new StringBuilder();  
+		int HttpResult = con.getResponseCode(); 
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+		    BufferedReader br = new BufferedReader(
+		            new InputStreamReader(con.getInputStream(), "utf-8"));
+		    String line = null;  
+		    while ((line = br.readLine()) != null) {  
+		        sb.append(line + "\n");  
+		    }
+		    br.close();
+		    System.out.println("" + sb.toString());  
+		} else {
+		    System.out.println(con.getResponseMessage() + " eror");  
+		}  
+		
 	}
 
 	@Override
@@ -76,7 +160,7 @@ public class SensorService implements ISensorService {
 			jsonString.append(readAPIResponse);
 		}
 		JSONObject jsonObj = new JSONObject(jsonString.toString());
-		System.out.println(jsonObj);
+//		System.out.println(jsonObj);
 //		System.out.println(jsonObj.get("1"));
 
 			String obj = jsonObj.get(sensorId).toString();
@@ -109,7 +193,7 @@ public class SensorService implements ISensorService {
 			jsonString.append(readAPIResponse);
 		}
 		JSONObject jsonObj = new JSONObject(jsonString.toString());
-		System.out.println(jsonObj);
+//		System.out.println(jsonObj);
 //		System.out.println(jsonObj.get("1"));
 
 		for (int i = 0; i < jsonObj.length(); i++) {
