@@ -8,6 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="images"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SensorAppRMI"/>
-	<classpathentry kind="lib" path="C:/Users/AyeshRox/Videos/java-json.jar"/>
+	<classpathentry kind="lib" path="lib/json-20190722.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

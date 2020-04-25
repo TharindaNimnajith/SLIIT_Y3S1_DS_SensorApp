@@ -206,7 +206,7 @@ public class LoginUI extends JFrame {
 		LoginUI window = new LoginUI();
 		window.frmLoginSystem.setVisible(true);
 	}
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

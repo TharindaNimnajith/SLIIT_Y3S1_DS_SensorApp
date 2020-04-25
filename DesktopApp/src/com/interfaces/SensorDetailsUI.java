@@ -9,7 +9,6 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -38,8 +37,7 @@ public class SensorDetailsUI extends JFrame {
 	private JPanel contentPane;
 	static int status = 0;
 
-	public SensorDetailsUI()
-			throws Exception {
+	public SensorDetailsUI() throws Exception {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);

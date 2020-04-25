@@ -6,7 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class SensorClient {
-	
+
 	public static void main(String[] args) {
 		System.setProperty("java.security.policy", "file:allowall.policy");
 		SensorService sensorService = null;

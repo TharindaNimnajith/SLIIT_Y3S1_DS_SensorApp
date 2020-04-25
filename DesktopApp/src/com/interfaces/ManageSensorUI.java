@@ -13,7 +13,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -52,8 +51,7 @@ public class ManageSensorUI extends JFrame {
 	private ISensorService iSensorService = (ISensorService) new SensorService();
 	private ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 
-	public ManageSensorUI()
-			throws Exception {
+	public ManageSensorUI() throws Exception {
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -162,7 +160,6 @@ public class ManageSensorUI extends JFrame {
 					try {
 						displayTable();
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -194,7 +191,6 @@ public class ManageSensorUI extends JFrame {
 					try {
 						displayTable();
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -231,7 +227,6 @@ public class ManageSensorUI extends JFrame {
 					try {
 						displayTable();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -394,12 +389,19 @@ public class ManageSensorUI extends JFrame {
 		panel.add(scrollPane);
 
 		String col[] = { "Sensor ID", "Sensor Name", "Floor No", "Room No" };
-		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
 		JTable table = new JTable(tableModel);
 		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
+		table.setCellSelectionEnabled(false);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setForeground(Color.blue);
 		table.setRowHeight(24);
@@ -410,6 +412,8 @@ public class ManageSensorUI extends JFrame {
 		table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		table.setBackground(new Color(240, 230, 140));
 		table.setSurrendersFocusOnKeystroke(true);
+		table.setFocusable(false);
+		table.setRowSelectionAllowed(true);
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);

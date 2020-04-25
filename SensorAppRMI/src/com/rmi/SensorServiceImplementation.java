@@ -43,6 +43,5 @@ public class SensorServiceImplementation implements SensorService {
 	@Override
 	public void getActiveSensors() throws RemoteException {
 
-	}	
+	}
 }
-
