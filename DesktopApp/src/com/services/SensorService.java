@@ -9,6 +9,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.models.Sensor;
@@ -141,34 +143,41 @@ public class SensorService implements ISensorService {
 	}
 
 	@Override
-	public ArrayList<Sensor> getSensorsList() throws IOException {
-		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-		String url = "http://localhost:5000/api/sensor/";
-		URL seatURL = new URL(url);
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
-		String readAPIResponse = " ";
-		StringBuilder jsonString = new StringBuilder();
-		while ((readAPIResponse = br.readLine()) != null) {
-			jsonString.append(readAPIResponse);
+		public ArrayList<Sensor> getSensorsList() throws Exception {
+			ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+			String url = "http://localhost:5000/api/sensor/";
+			URL seatURL = new URL(url);
+			// Return the JSON Response from the API
+			BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
+			String readAPIResponse = " ";
+			StringBuilder jsonString = new StringBuilder();
+			while ((readAPIResponse = br.readLine()) != null) {
+				jsonString.append(readAPIResponse);
+			}
+	//		JSONObject jsonObj = new JSONObject();
+			
+	
+			JSONArray jsonObj= new JSONArray(jsonString.toString());
+			System.out.println(jsonObj);
+	
+			for (int i = 0; i < jsonObj.length(); i++) {
+	
+				JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
+				
+				
+				Sensor s1 = new Sensor();
+				s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
+				s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
+				s1.setFloorNo(Integer.parseInt(jsonObj2.get("floorNo").toString()));
+				s1.setRoomNo(Integer.parseInt(jsonObj2.get("roomNo").toString()));
+				s1.setSensorId(jsonObj2.get("id").toString());
+				s1.setSensorName(jsonObj2.get("name").toString());
+				s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+	
+				sensors.add(s1);
+	
+			}
+	
+			return sensors;
 		}
-		JSONObject jsonObj = new JSONObject(jsonString.toString());
-
-		for (int i = 0; i < jsonObj.length(); i++) {
-			String obj = jsonObj.get(String.valueOf(i + 1)).toString();
-			JSONObject jsonObj2 = new JSONObject(obj);
-
-			Sensor s1 = new Sensor();
-			s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
-			s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
-			s1.setFloorNo(Integer.parseInt(jsonObj2.get("floorNo").toString()));
-			s1.setRoomNo(Integer.parseInt(jsonObj2.get("roomNo").toString()));
-			s1.setSensorId(jsonObj2.get("id").toString());
-			s1.setSensorName(jsonObj2.get("name").toString());
-			s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
-			sensors.add(s1);
-		}
-
-		return sensors;
-	}
 }
