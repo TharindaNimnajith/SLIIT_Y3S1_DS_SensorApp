@@ -23,9 +23,9 @@ router.post("/sensor", (req, res, next) => {
 
 router.put("/sensor/:id", (req, res, next) => {
   Sensor.findOneAndUpdate(
-    { id: req.params.id },
-    { $set: req.body },
-    { new: true },
+    {id: req.params.id},
+    {$set: req.body},
+    {new: true},
     (error, doc) => {
       if (doc.co2Level > 5 && doc.smokeLevel > 5) {
         let info = {
@@ -34,7 +34,6 @@ router.put("/sensor/:id", (req, res, next) => {
           subject: "SmokeLevel and CO2 level Increased",
           text: `SmokeLevel of the sensor ${doc.id} increased to ${doc.smokeLevel}  and CO2 Level of the sensor ${doc.id} increased to ${doc.co2Level}`,
         };
-
         transporter.sendMail(info, (err, data) => {
           if (err) {
             console.log(err);
@@ -42,9 +41,7 @@ router.put("/sensor/:id", (req, res, next) => {
             console.log("sent");
           }
         });
-
         console.log("message has been sent to 077465521");
-
         console.log(doc.co2Level);
       } else if (doc.co2Level > 5) {
         let info = {
@@ -53,7 +50,6 @@ router.put("/sensor/:id", (req, res, next) => {
           subject: "CO2 Level Increased",
           text: `CO2 Level of the sensor ${doc.id} increased to ${doc.co2Level}`,
         };
-
         transporter.sendMail(info, (err, data) => {
           if (err) {
             console.log(err);
@@ -61,9 +57,7 @@ router.put("/sensor/:id", (req, res, next) => {
             console.log("sent");
           }
         });
-
         console.log("message has been sent to 077465521");
-
         console.log(doc.co2Level);
       } else if (doc.smokeLevel > 5) {
         let info = {
@@ -72,7 +66,6 @@ router.put("/sensor/:id", (req, res, next) => {
           subject: "SmokeLevel Increased",
           text: `SmokeLevel of the sensor ${doc.id} increased to ${doc.smokeLevel}`,
         };
-
         transporter.sendMail(info, (err, data) => {
           if (err) {
             console.log(err);
@@ -80,12 +73,9 @@ router.put("/sensor/:id", (req, res, next) => {
             console.log("sent");
           }
         });
-
         console.log("message has been sent to 077465521");
-
         console.log(doc.smokeLevel);
       }
-
       res.send(doc);
     }
   );
@@ -97,20 +87,28 @@ router.get("/sensor", (req, res, next) => {
   }).catch(next);
 });
 
-router.get("/sensor/:id", (req, res, next) => {
-  Sensor.find({ id: req.params.id }, (err, sensors) => {
+router.get("/sensors", (req, res, next) => {
+  Sensor.find({}, (err, sensors) => {
     var sensorMap = {};
-
     sensors.forEach((sensor) => {
       sensorMap[sensor.id] = sensor;
     });
+    res.send(sensorMap);
+  }).catch(next);
+});
 
+router.get("/sensor/:id", (req, res, next) => {
+  Sensor.find({id: req.params.id}, (err, sensors) => {
+    var sensorMap = {};
+    sensors.forEach((sensor) => {
+      sensorMap[sensor.id] = sensor;
+    });
     res.send(sensorMap);
   }).catch(next);
 });
 
 router.delete("/sensor/:id", (req, res, next) => {
-  Sensor.deleteOne({ id: req.params.id }, (err, result) => {
+  Sensor.deleteOne({id: req.params.id}, (err, result) => {
     if (result.deletedCount) {
       res.json({
         message: `deleted ${req.params.id}`,

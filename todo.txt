@@ -20,6 +20,3 @@
 20. Refer to deliverables and requirements completion in assignment2.docx
 21. Update and click on another row in the table - error
 22. Validation when inserting and updating - room + floor - warning message
-23. JSON Object to array
-24. Git merge
-25. 
