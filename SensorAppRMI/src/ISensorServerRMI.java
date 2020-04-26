@@ -1,9 +1,7 @@
-package com.rmi;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface SensorService extends Remote {
+public interface ISensorServerRMI extends Remote {
 
 	public void insertSensor() throws RemoteException;
 

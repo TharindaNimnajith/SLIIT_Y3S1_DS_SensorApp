@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Sensor = require("../models/sensor-model");
 const nodeailer = require("nodemailer");
+
 require("dotenv").config();
 
 let transporter = nodeailer.createTransport({
@@ -92,13 +93,7 @@ router.put("/sensor/:id", (req, res, next) => {
 
 router.get("/sensor", (req, res, next) => {
   Sensor.find({}, (err, sensors) => {
-    var sensorMap = {};
-
-    sensors.forEach((sensor) => {
-      sensorMap[sensor.id] = sensor;
-    });
-
-    res.send(sensorMap);
+    res.send(sensors);
   }).catch(next);
 });
 

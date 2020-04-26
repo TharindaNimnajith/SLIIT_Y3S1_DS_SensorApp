@@ -3,6 +3,7 @@
 	<name>DesktopApp</name>
 	<comment></comment>
 	<projects>
+		<project>SensorAppRMI</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -14,10 +15,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<variableList>
-		<variable>
-			<name>SensorAppRMI</name>
-			<value>file:/C:/Users/ASUS/Desktop/SLIIT_Y3S1_DS_SensorApp/SensorAppRMI</value>
-		</variable>
-	</variableList>
 </projectDescription>
