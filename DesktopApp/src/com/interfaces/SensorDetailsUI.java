@@ -9,7 +9,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -27,6 +28,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.json.JSONException;
+
 import com.models.Sensor;
 import com.services.ISensorService;
 import com.services.SensorService;
@@ -38,11 +41,11 @@ public class SensorDetailsUI extends JFrame {
 	private JPanel contentPane;
 	static int status = 0;
 
-	public SensorDetailsUI()
-			throws Exception {
+	public SensorDetailsUI() throws IOException {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);
+		setResizable(false);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -114,6 +117,23 @@ public class SensorDetailsUI extends JFrame {
 		btnLogin.setForeground(new Color(0, 0, 0));
 		btnLogin.setBackground(new Color(204, 204, 204));
 		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnLogin.setFocusable(false);
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (JOptionPane.showConfirmDialog(null,
+							"Confirm if you really want to navigate to the login window.",
+							"Login window navigation confirmation",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						LoginUI loginUI = new LoginUI();
+						loginUI.displayFrame();
+						disposeFrame();
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		panel.add(btnLogin);
 
 		JLabel lblTopic = new JLabel("Sensor Details");
@@ -122,21 +142,10 @@ public class SensorDetailsUI extends JFrame {
 		lblTopic.setForeground(SystemColor.textHighlightText);
 		lblTopic.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTopic.setFont(new Font("Showcard Gothic", Font.BOLD, 30));
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					LoginUI loginUI = new LoginUI();
-					loginUI.displayFrame();
-					disposeFrame();
-				} catch (Exception e1) {
-					System.out.println(e1);
-				}
-			}
-		});
 		panel.add(lblTopic);
 	}
 
-	public ArrayList<Sensor> refreshTable() throws Exception {
+	public ArrayList<Sensor> refreshTable() throws IOException {
 		ISensorService iSensorService = (ISensorService) new SensorService();
 		ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 		sensorsList = iSensorService.getSensorsList();
@@ -161,6 +170,15 @@ public class SensorDetailsUI extends JFrame {
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
+				} catch (ConnectException e) {
+					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
+							"WARNING!", JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
+				} catch (JSONException e) {
+					JOptionPane.showMessageDialog(null,
+							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
+							JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

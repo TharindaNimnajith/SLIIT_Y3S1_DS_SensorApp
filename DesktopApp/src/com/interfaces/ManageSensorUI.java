@@ -13,7 +13,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -32,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import org.json.JSONException;
 
 import com.models.Sensor;
 import com.services.ISensorService;
@@ -52,8 +55,9 @@ public class ManageSensorUI extends JFrame {
 	private ISensorService iSensorService = (ISensorService) new SensorService();
 	private ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
 
-	public ManageSensorUI()
-			throws Exception {
+	static int status = 0;
+
+	public ManageSensorUI() throws IOException {
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -87,23 +91,27 @@ public class ManageSensorUI extends JFrame {
 		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnLogout.setBackground(new Color(204, 204, 204));
 		btnLogout.setForeground(new Color(0, 0, 0));
+		btnLogout.setFocusable(false);
 		btnLogout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					SensorDetailsUI sensorDetailsUI = new SensorDetailsUI();
-					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-					sensorDetailsUI.setLocation(dim.width / 2 - sensorDetailsUI.getSize().width / 2,
-							dim.height / 2 - sensorDetailsUI.getSize().height / 2);
-					sensorDetailsUI.setVisible(true);
-					disposeFrame();
-					if (SensorDetailsUI.status == 1) {
-						JOptionPane.showMessageDialog(null,
-								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
-								JOptionPane.WARNING_MESSAGE);
+					if (JOptionPane.showConfirmDialog(null, "Do you really want to logout?", "Logout Confirmation",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						SensorDetailsUI sensorDetailsUI = new SensorDetailsUI();
+						Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+						sensorDetailsUI.setLocation(dim.width / 2 - sensorDetailsUI.getSize().width / 2,
+								dim.height / 2 - sensorDetailsUI.getSize().height / 2);
+						sensorDetailsUI.setVisible(true);
+						disposeFrame();
+						if (SensorDetailsUI.status == 1) {
+							JOptionPane.showMessageDialog(null,
+									"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+									JOptionPane.WARNING_MESSAGE);
+						}
 					}
 				} catch (Exception e1) {
-					System.out.println(e1);
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -140,29 +148,33 @@ public class ManageSensorUI extends JFrame {
 		btnAdd.setBackground(new Color(210, 105, 30));
 		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnAdd.setBounds(265, 437, 113, 47);
+		btnAdd.setFocusable(false);
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if (!txtSensorId.getText().isEmpty() && !txtSensorName.getText().isEmpty()
 							&& !txtRoomNo.getText().isEmpty() && !txtFloorNo.getText().isEmpty()) {
-						sensor.setSensorId(txtSensorId.getText());
-						sensor.setSensorName(txtSensorName.getText());
-						sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
-						sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
-						iSensorService.addSensor(sensor);
-						JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
-						resetFields();
+						int action = JOptionPane.showConfirmDialog(null, "Do you really want to add a new sensor?",
+								"Add Sensor", JOptionPane.YES_NO_OPTION);
+						if (action == 0) {
+							sensor.setSensorId(txtSensorId.getText());
+							sensor.setSensorName(txtSensorName.getText());
+							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
+							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
+							iSensorService.addSensor(sensor);
+							JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Fill all the fields and try again!", "Insert Error!",
 								JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
-					System.out.println(e1);
+					e1.printStackTrace();
 				} finally {
+					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -176,16 +188,27 @@ public class ManageSensorUI extends JFrame {
 		btnUpdate.setForeground(new Color(255, 255, 255));
 		btnUpdate.setBackground(new Color(210, 105, 30));
 		btnUpdate.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnUpdate.setFocusable(false);
 		btnUpdate.setBounds(454, 437, 113, 47);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					sensor.setSensorId(txtSensorId.getText());
-					sensor.setSensorName(txtSensorName.getText());
-					sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
-					sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
-					iSensorService.updateSensor(sensor.getSensorId(), sensor);
-					JOptionPane.showMessageDialog(null, "Sensor updated sucessfully.");
+					if (!txtSensorId.getText().isEmpty() && !txtSensorName.getText().isEmpty()
+							&& !txtRoomNo.getText().isEmpty() && !txtFloorNo.getText().isEmpty()) {
+						int action = JOptionPane.showConfirmDialog(null, "Do you really want to update the sensor?",
+								"Update Sensor", JOptionPane.YES_NO_OPTION);
+						if (action == 0) {
+							sensor.setSensorId(txtSensorId.getText());
+							sensor.setSensorName(txtSensorName.getText());
+							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
+							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
+							iSensorService.updateSensor(sensor.getSensorId(), sensor);
+							JOptionPane.showMessageDialog(null, "Sensor updated sucessfully.");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Fill all the fields and try again!", "Update Error!",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Please select any sensor to update.", "WARNING!",
 							JOptionPane.ERROR_MESSAGE);
@@ -193,8 +216,7 @@ public class ManageSensorUI extends JFrame {
 					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -208,6 +230,7 @@ public class ManageSensorUI extends JFrame {
 		btnRemove.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		btnRemove.setForeground(new Color(255, 255, 255));
 		btnRemove.setBackground(new Color(210, 105, 30));
+		btnRemove.setFocusable(false);
 		btnRemove.setBounds(643, 437, 113, 47);
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -230,8 +253,7 @@ public class ManageSensorUI extends JFrame {
 					resetFields();
 					try {
 						displayTable();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
@@ -244,6 +266,7 @@ public class ManageSensorUI extends JFrame {
 		btnExit.setIcon(new ImageIcon(img3));
 		btnExit.setForeground(new Color(255, 255, 255));
 		btnExit.setBackground(new Color(178, 34, 34));
+		btnExit.setFocusable(false);
 		btnExit.setBounds(832, 437, 113, 47);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -363,10 +386,18 @@ public class ManageSensorUI extends JFrame {
 		btnReset.setForeground(SystemColor.text);
 		btnReset.setBounds(76, 437, 113, 47);
 		btnReset.setIcon(new ImageIcon(img4));
+		btnReset.setFocusable(false);
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					resetFields();
+					if (!txtSensorId.getText().isEmpty() || !txtSensorName.getText().isEmpty()
+							|| !txtFloorNo.getText().isEmpty() || !txtRoomNo.getText().isEmpty()) {
+						int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?",
+								"Reset Data", JOptionPane.YES_NO_OPTION);
+						if (action == 0) {
+							resetFields();
+						}
+					}
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e);
 				}
@@ -377,7 +408,7 @@ public class ManageSensorUI extends JFrame {
 		displayTable();
 	}
 
-	public ArrayList<Sensor> refreshTable() throws Exception {
+	public ArrayList<Sensor> refreshTable() throws IOException {
 		sensorsList = iSensorService.getSensorsList();
 		return sensorsList;
 	}
@@ -386,7 +417,7 @@ public class ManageSensorUI extends JFrame {
 		super.dispose();
 	}
 
-	public void displayTable() throws Exception {
+	public void displayTable() throws IOException {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(255, 255, 255));
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));
@@ -394,12 +425,19 @@ public class ManageSensorUI extends JFrame {
 		panel.add(scrollPane);
 
 		String col[] = { "Sensor ID", "Sensor Name", "Floor No", "Room No" };
-		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
 		JTable table = new JTable(tableModel);
 		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
+		table.setCellSelectionEnabled(false);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setForeground(Color.blue);
 		table.setRowHeight(24);
@@ -410,6 +448,8 @@ public class ManageSensorUI extends JFrame {
 		table.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		table.setBackground(new Color(240, 230, 140));
 		table.setSurrendersFocusOnKeystroke(true);
+		table.setFocusable(false);
+		table.setRowSelectionAllowed(true);
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -460,8 +500,25 @@ public class ManageSensorUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManageSensorUI frame = new ManageSensorUI();
+					SensorDetailsUI frame = new SensorDetailsUI();
+					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
+							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
+					if (status == 1) {
+						JOptionPane.showMessageDialog(null,
+								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+								JOptionPane.WARNING_MESSAGE);
+					}
+				} catch (ConnectException e) {
+					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
+							"WARNING!", JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
+				} catch (JSONException e) {
+					JOptionPane.showMessageDialog(null,
+							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
+							JOptionPane.WARNING_MESSAGE);
+					e.printStackTrace();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
