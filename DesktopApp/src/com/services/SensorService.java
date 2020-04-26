@@ -15,6 +15,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -223,16 +224,15 @@ public class SensorService implements ISensorService {
 		while ((readAPIResponse = br.readLine()) != null) {
 			jsonString.append(readAPIResponse);
 		}
-		JSONObject jsonObj = new JSONObject(jsonString.toString());
-//		System.out.println(jsonObj);
-//		System.out.println(jsonObj.get("1"));
+
+		
+		JSONArray jsonObj= new JSONArray(jsonString.toString());
 
 		for (int i = 0; i < jsonObj.length(); i++) {
 
-			String obj = jsonObj.get(String.valueOf(i + 1)).toString();
-
-			JSONObject jsonObj2 = new JSONObject(obj);
-
+			JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
+			
+			
 			Sensor s1 = new Sensor();
 			s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
 			s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
