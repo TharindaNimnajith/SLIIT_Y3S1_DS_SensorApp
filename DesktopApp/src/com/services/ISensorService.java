@@ -1,19 +1,20 @@
 package com.services;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.models.Sensor;
 
 public interface ISensorService {
 
-	public void addSensor(Sensor sensor) throws IOException;
+	public void addSensor(Sensor sensor);
 
-	public void updateSensor(String sensorId, Sensor sensor) throws IOException;
+	public void updateSensor(String sensorId, Sensor sensor);
 
-	public void removeSensor(String sensorId) throws IOException;
+	public void removeSensor(String sensorId);
 
-	public Sensor getSensor(String sensorId) throws IOException;
+	public Sensor getSensor(String sensorId);
 
-	public ArrayList<Sensor> getSensorsList() throws IOException;
+	public ArrayList<Sensor> getSensorsList();
+
+	public ArrayList<Sensor> getActiveSensorsList();
 }

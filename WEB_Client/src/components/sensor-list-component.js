@@ -8,18 +8,18 @@ class SensorList extends Component {
     this.state = {
       sensors: [
         {
-          id: 2,
+          id: "2",
           active: true,
-          floorNo: "1333",
-          roomNo: "sdf",
+          floorNo: 3,
+          roomNo: 1,
           smokeLevel: 4,
           co2Level: 6,
         },
         {
-          id: 4,
+          id: "4",
           active: false,
-          floorNo: "eeee",
-          roomNo: "sdf",
+          floorNo: 1,
+          roomNo: 2,
           smokeLevel: 3,
           co2Level: 2,
         }
@@ -29,10 +29,10 @@ class SensorList extends Component {
 
   getSensorList() {
     axios
-      .get("http://localhost:5000/api/sensors")
+      .get("http://localhost:5000/api/sensor")
       .then((response) => {
         this.setState({sensors: [...response.data]});
-        console.log(response);
+        console.log("response");
       })
       .catch((err) => {
         console.log(`error is ${err}`);
@@ -40,7 +40,7 @@ class SensorList extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.getSensorList(), 4000);
+    this.interval = setInterval(() => this.getSensorList(), 40000);
   }
 
   componentWillUnmount() {

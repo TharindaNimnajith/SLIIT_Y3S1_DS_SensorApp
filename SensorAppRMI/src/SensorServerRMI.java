@@ -1,8 +1,21 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.models.Sensor;
 
 public class SensorServerRMI extends UnicastRemoteObject implements ISensorServerRMI {
 
@@ -10,40 +23,195 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 
 	private int count = 0;
 
-	protected SensorServerRMI() throws RemoteException {
+	public SensorServerRMI() throws RemoteException {
 		super();
 		increment();
 		System.out.println("Clients: " + count);
 	}
 
 	@Override
-	public void insertSensor() throws RemoteException {
+	public void addSensor(Sensor sensor) throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/";
+		URL object = new URL(url);
 
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("POST");
+
+		JSONObject obj = new JSONObject();
+		obj.put("smokeLevel", sensor.getSmokeLevel());
+		obj.put("co2Level", sensor.getCO2Level());
+		obj.put("id", sensor.getSensorId());
+		obj.put("floorNo", sensor.getFloorNo());
+		obj.put("name", sensor.getSensorName());
+		obj.put("roomNo", sensor.getRoomNo());
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		wr.write(obj.toString());
+		wr.flush();
+
+		StringBuilder sb = new StringBuilder();
+		int HttpResult = con.getResponseCode();
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			br.close();
+		}
 	}
 
 	@Override
-	public void updateSensor() throws RemoteException {
+	public void updateSensor(String sensorId, Sensor sensor) throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/" + sensorId;
+		URL object = new URL(url);
 
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("PUT");
+
+		JSONObject obj = new JSONObject();
+		obj.put("smokeLevel", sensor.getSmokeLevel());
+		obj.put("co2Level", sensor.getCO2Level());
+		obj.put("id", sensor.getSensorId());
+		obj.put("floorNo", sensor.getFloorNo());
+		obj.put("name", sensor.getSensorName());
+		obj.put("roomNo", sensor.getRoomNo());
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		wr.write(obj.toString());
+		wr.flush();
+
+		StringBuilder sb = new StringBuilder();
+		int HttpResult = con.getResponseCode();
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			br.close();
+		}
 	}
 
 	@Override
-	public void deleteSensor() throws RemoteException {
+	public void removeSensor(String sensorId) throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/" + sensorId;
+		URL object = new URL(url);
 
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+		con.setDoOutput(true);
+		con.setDoInput(true);
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("DELETE");
+
+		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+		wr.flush();
+
+		StringBuilder sb = new StringBuilder();
+		int HttpResult = con.getResponseCode();
+		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			br.close();
+		}
 	}
 
 	@Override
-	public void getSensor() throws RemoteException {
+	public Sensor getSensor(String sensorId) throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/" + sensorId;
+		URL seatURL = new URL(url);
+		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
 
+		String readAPIResponse = " ";
+		StringBuilder jsonString = new StringBuilder();
+		while ((readAPIResponse = br.readLine()) != null) {
+			jsonString.append(readAPIResponse);
+		}
+
+		JSONObject jsonObj = new JSONObject(jsonString.toString());
+		String obj = jsonObj.get(sensorId).toString();
+		JSONObject jsonObj2 = new JSONObject(obj);
+
+		Sensor s1 = new Sensor();
+		s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
+		s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
+		s1.setFloorNo(Integer.parseInt(jsonObj2.get("floorNo").toString()));
+		s1.setRoomNo(Integer.parseInt(jsonObj2.get("roomNo").toString()));
+		s1.setSensorId(jsonObj2.get("id").toString());
+		s1.setSensorName(jsonObj2.get("name").toString());
+		s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+		return s1;
 	}
 
 	@Override
-	public void getAllSensors() throws RemoteException {
+	public ArrayList<Sensor> getSensorsList() throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/";
+		URL seatURL = new URL(url);
+		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
 
+		String readAPIResponse = " ";
+		StringBuilder jsonString = new StringBuilder();
+		while ((readAPIResponse = br.readLine()) != null) {
+			jsonString.append(readAPIResponse);
+		}
+		JSONArray jsonObj = new JSONArray(jsonString.toString());
+
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		for (int i = 0; i < jsonObj.length(); i++) {
+			JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
+			Sensor s1 = new Sensor();
+			s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
+			s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
+			s1.setFloorNo(Integer.parseInt(jsonObj2.get("floorNo").toString()));
+			s1.setRoomNo(Integer.parseInt(jsonObj2.get("roomNo").toString()));
+			s1.setSensorId(jsonObj2.get("id").toString());
+			s1.setSensorName(jsonObj2.get("name").toString());
+			s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+			sensors.add(s1);
+		}
+		return sensors;
 	}
 
 	@Override
-	public void getActiveSensors() throws RemoteException {
+	public ArrayList<Sensor> getActiveSensorsList() throws RemoteException, IOException {
+		String url = "http://localhost:5000/api/sensor/";
+		URL seatURL = new URL(url);
+		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
 
+		String readAPIResponse = " ";
+		StringBuilder jsonString = new StringBuilder();
+		while ((readAPIResponse = br.readLine()) != null) {
+			jsonString.append(readAPIResponse);
+		}
+		JSONArray jsonObj = new JSONArray(jsonString.toString());
+
+		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		for (int i = 0; i < jsonObj.length(); i++) {
+			JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
+			Sensor s1 = new Sensor();
+			s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
+			s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
+			s1.setFloorNo(Integer.parseInt(jsonObj2.get("floorNo").toString()));
+			s1.setRoomNo(Integer.parseInt(jsonObj2.get("roomNo").toString()));
+			s1.setSensorId(jsonObj2.get("id").toString());
+			s1.setSensorName(jsonObj2.get("name").toString());
+			s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+			if (s1.isActive()) {
+				sensors.add(s1);
+			}
+		}
+		return sensors;
 	}
 
 	@Override

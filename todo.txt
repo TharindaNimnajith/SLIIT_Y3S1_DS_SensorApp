@@ -1,4 +1,3 @@
-01. RMI implementation
 02. Refresh ManageSensorUI JTable after Insert, Update and Delete Sensor
 03. Refresh SensorDetailsUI every ? seconds
 04. Refresh REST API every ? seconds
@@ -8,7 +7,6 @@
 08. Active attribute handling in ManageSensorUI
 09. Red color rows in SensorDetailsUI JTable for relevant sensors
 10. Sensor ID problem - remove from middle and add not next id
-11. Validate id field for insert and update in desktop client - status codes
 12. Sensor App - dummy values from sensors
 13. SMS
 14. Email & SMS from RMI JMS?
@@ -20,3 +18,9 @@
 20. Refer to deliverables and requirements completion in assignment2.docx
 21. Update and click on another row in the table - error
 22. Validation when inserting and updating - room + floor - warning message
+
+*23. Issue with Web Client fetch API data
+*11. Validate id field for insert and update in desktop client - status codes
+*01. RMI implementation
+*24. Email to admin - email of admin store in db?
+*25. Admin username and pwd store in db?
