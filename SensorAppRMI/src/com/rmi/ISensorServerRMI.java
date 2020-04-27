@@ -1,9 +1,9 @@
+package com.rmi;
+
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-
-import com.models.Sensor;
 
 public interface ISensorServerRMI extends Remote {
 
@@ -19,5 +19,5 @@ public interface ISensorServerRMI extends Remote {
 
 	public ArrayList<Sensor> getActiveSensorsList() throws RemoteException, IOException;
 
-	public void increment() throws RemoteException;
+	public int increment() throws RemoteException;
 }

@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.json.JSONException;
 
-import com.models.Sensor;
+import com.rmi.SensorClientRMI;
 import com.services.ISensorService;
 import com.services.SensorService;
 
@@ -86,9 +86,9 @@ public class SensorDetailsUI extends JFrame {
 		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
-		ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
+		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
-		for (Sensor sensor1 : sensorsList) {
+		for (com.rmi.Sensor sensor1 : sensorsList) {
 			String sensorId = sensor1.getSensorId();
 			String sensorName = sensor1.getSensorName();
 			int roomNo = sensor1.getRoomNo();
@@ -145,9 +145,9 @@ public class SensorDetailsUI extends JFrame {
 		panel.add(lblTopic);
 	}
 
-	public ArrayList<Sensor> refreshTable() throws IOException {
+	public ArrayList<com.rmi.Sensor> refreshTable() throws IOException {
 		ISensorService iSensorService = (ISensorService) new SensorService();
-		ArrayList<Sensor> sensorsList = new ArrayList<Sensor>();
+		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = iSensorService.getSensorsList();
 		return sensorsList;
 	}
@@ -160,6 +160,7 @@ public class SensorDetailsUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					SensorClientRMI sensorClientRMI = new SensorClientRMI();
 					SensorDetailsUI frame = new SensorDetailsUI();
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,

@@ -3,7 +3,6 @@
 	<name>SensorAppRMI</name>
 	<comment></comment>
 	<projects>
-		<project>DesktopApp</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

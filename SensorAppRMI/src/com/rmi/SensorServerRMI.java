@@ -1,3 +1,5 @@
+package com.rmi;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.models.Sensor;
-
 public class SensorServerRMI extends UnicastRemoteObject implements ISensorServerRMI {
 
 	private static final long serialVersionUID = 1L;
@@ -25,8 +24,6 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 
 	public SensorServerRMI() throws RemoteException {
 		super();
-		increment();
-		System.out.println("Clients: " + count);
 	}
 
 	@Override
@@ -215,23 +212,29 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 	}
 
 	@Override
-	public synchronized void increment() throws RemoteException {
+	public synchronized int increment() throws RemoteException {
 		count++;
+		return count;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	public static void main(String[] args) {
 		System.setProperty("java.security.policy", "file:allowall.policy");
 		try {
+			Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 			SensorServerRMI sensorServerRMI = new SensorServerRMI();
-			Registry registry = LocateRegistry.getRegistry();
-			registry.bind("SensorService", sensorServerRMI);
+			registry.rebind("rmi://localhost/server", sensorServerRMI);
 			System.out.println("Sensor server started...");
 		} catch (RemoteException remoteException) {
 			System.err.println(remoteException.getMessage());
 			remoteException.printStackTrace();
-		} catch (AlreadyBoundException alreadyBoundException) {
-			System.err.println(alreadyBoundException.getMessage());
-			alreadyBoundException.printStackTrace();
 		} catch (Exception exception) {
 			System.err.println(exception.getMessage());
 			exception.printStackTrace();

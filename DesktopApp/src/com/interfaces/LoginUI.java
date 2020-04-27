@@ -27,6 +27,8 @@ import javax.swing.border.LineBorder;
 
 import org.json.JSONException;
 
+import com.rmi.SensorClientRMI;
+
 public class LoginUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -231,6 +233,7 @@ public class LoginUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					SensorClientRMI sensorClientRMI = new SensorClientRMI();
 					SensorDetailsUI frame = new SensorDetailsUI();
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,

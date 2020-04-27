@@ -1,4 +1,4 @@
-package com.models;
+package com.rmi;
 
 public class Sensor {
 

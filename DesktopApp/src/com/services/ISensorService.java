@@ -1,20 +1,20 @@
 package com.services;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-
-import com.models.Sensor;
 
 public interface ISensorService {
 
-	public void addSensor(Sensor sensor);
+	public void addSensor(com.rmi.Sensor sensor) throws RemoteException, IOException;
 
-	public void updateSensor(String sensorId, Sensor sensor);
+	public void updateSensor(String sensorId, com.rmi.Sensor sensor) throws RemoteException, IOException;
 
-	public void removeSensor(String sensorId);
+	public void removeSensor(String sensorId) throws RemoteException, IOException;
 
-	public Sensor getSensor(String sensorId);
+	public com.rmi.Sensor getSensor(String sensorId) throws RemoteException, IOException;
 
-	public ArrayList<Sensor> getSensorsList();
+	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException;
 
-	public ArrayList<Sensor> getActiveSensorsList();
+	public ArrayList<com.rmi.Sensor> getActiveSensorsList() throws RemoteException, IOException;
 }
