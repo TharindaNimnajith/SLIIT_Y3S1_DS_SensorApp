@@ -1,1 +1,1 @@
-# SLIIT_Y3S1_DS_SensorApp
+# SLIIT Y3S1 DS SensorApp

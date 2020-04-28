@@ -15,6 +15,4 @@ public interface ISensorService {
 	public com.rmi.Sensor getSensor(String sensorId) throws RemoteException, IOException;
 
 	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException;
-
-	public ArrayList<com.rmi.Sensor> getActiveSensorsList() throws RemoteException, IOException;
 }

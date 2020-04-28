@@ -37,9 +37,4 @@ public class SensorService implements ISensorService {
 	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException {
 		return sensorServerRMI.getSensorsList();
 	}
-
-	@Override
-	public ArrayList<com.rmi.Sensor> getActiveSensorsList() throws RemoteException, IOException {
-		return sensorServerRMI.getActiveSensorsList();
-	}
 }

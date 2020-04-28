@@ -58,8 +58,8 @@ class SensorList extends Component {
             <th>Active Status</th>
             <th>Floor Number</th>
             <th>Room Number</th>
-            <th>Smoke Level(1-10)</th>
-            <th>CO2 Level(1-10)</th>
+            <th>Smoke Level (1-10)</th>
+            <th>CO2 Level (1-10)</th>
           </tr>
           </thead>
           <tbody>

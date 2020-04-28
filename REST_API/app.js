@@ -5,7 +5,7 @@ var cors = require("cors");
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -13,7 +13,7 @@ app.use("/api", require("./routes/sensor-routes"));
 
 app.use(function (err, req, res, next) {
   console.log(err);
-  res.status(422).send({ error: err.message });
+  res.status(422).send({error: err.message});
 });
 
 mongoose

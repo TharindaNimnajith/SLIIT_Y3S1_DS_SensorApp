@@ -17,7 +17,5 @@ public interface ISensorServerRMI extends Remote {
 
 	public ArrayList<Sensor> getSensorsList() throws RemoteException, IOException;
 
-	public ArrayList<Sensor> getActiveSensorsList() throws RemoteException, IOException;
-
 	public int increment() throws RemoteException;
 }
