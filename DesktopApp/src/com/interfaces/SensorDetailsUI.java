@@ -63,7 +63,7 @@ public class SensorDetailsUI extends JFrame {
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));
 		panel_1.add(scrollPane);
 
-		String col[] = { "Sensor ID", "Sensor Name", "Floor No", "Room No", "CO2 Level", "Smoke Level" };
+		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No", "CO2 Level", "Smoke Level" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 		JTable table = new JTable(tableModel);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -85,6 +85,7 @@ public class SensorDetailsUI extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
@@ -95,7 +96,13 @@ public class SensorDetailsUI extends JFrame {
 			int floorNo = sensor1.getFloorNo();
 			int CO2Level = sensor1.getCO2Level();
 			int smokeLevel = sensor1.getSmokeLevel();
-			Object[] objs = { sensorId, sensorName, floorNo, roomNo, CO2Level, smokeLevel };
+			String isActive;
+			if (sensor1.isActive()) {
+				isActive = "Active";
+			} else {
+				isActive = "Not Active";
+			}
+			Object[] objs = { sensorId, sensorName, isActive, floorNo, roomNo, CO2Level, smokeLevel };
 			tableModel.addRow(objs);
 			if (CO2Level > 5 || smokeLevel > 5) {
 				status = 1;

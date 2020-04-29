@@ -45,6 +45,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		obj.put("floorNo", sensor.getFloorNo());
 		obj.put("name", sensor.getSensorName());
 		obj.put("roomNo", sensor.getRoomNo());
+		obj.put("active", sensor.isActive());
 
 		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 		wr.write(obj.toString());
@@ -81,6 +82,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		obj.put("floorNo", sensor.getFloorNo());
 		obj.put("name", sensor.getSensorName());
 		obj.put("roomNo", sensor.getRoomNo());
+		obj.put("active", sensor.isActive());
 
 		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 		wr.write(obj.toString());

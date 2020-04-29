@@ -16,10 +16,16 @@ app.use(function (err, req, res, next) {
   res.status(422).send({error: err.message});
 });
 
+const uri = 'mongodb+srv://ayesh:ayesh@ayesh-mongo-cluster-jqsxb.mongodb.net/sliit-y3s1-ds-restAPI?retryWrites=true&w=majority';
+
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+};
+
 mongoose
-  .connect(
-    "mongodb+srv://ayesh:ayesh@ayesh-mongo-cluster-jqsxb.mongodb.net/sliit-y3s1-ds-restAPI?retryWrites=true&w=majority"
-  )
+  .connect(uri, options)
   .then(() => {
     app.listen(5000);
   })

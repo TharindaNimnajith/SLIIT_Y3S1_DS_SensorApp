@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -49,6 +50,7 @@ public class ManageSensorUI extends JFrame {
 	private JTextField txtSensorName;
 	private JTextField txtRoomNo;
 	private JTextField txtFloorNo;
+	private JCheckBox checkboxIsActive;
 
 	private JPanel panel = new JPanel();
 	private com.rmi.Sensor sensor = new com.rmi.Sensor();
@@ -161,6 +163,7 @@ public class ManageSensorUI extends JFrame {
 							sensor.setSensorName(txtSensorName.getText());
 							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
 							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
+							sensor.setActive(checkboxIsActive.isSelected());
 							iSensorService.addSensor(sensor);
 							JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
 						}
@@ -202,6 +205,7 @@ public class ManageSensorUI extends JFrame {
 							sensor.setSensorName(txtSensorName.getText());
 							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
 							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
+							sensor.setActive(checkboxIsActive.isSelected());
 							iSensorService.updateSensor(sensor.getSensorId(), sensor);
 							JOptionPane.showMessageDialog(null, "Sensor updated sucessfully.");
 						}
@@ -280,7 +284,7 @@ public class ManageSensorUI extends JFrame {
 
 		JPanel panel2 = new JPanel();
 		panel2.setBackground(new Color(102, 204, 255));
-		panel2.setBounds(38, 265, 947, 125);
+		panel2.setBounds(38, 251, 947, 160);
 		panel2.setLayout(null);
 		panel.add(panel2);
 
@@ -380,6 +384,14 @@ public class ManageSensorUI extends JFrame {
 		});
 		panel2.add(txtFloorNo);
 
+		checkboxIsActive = new JCheckBox("Is Active");
+		checkboxIsActive.setSelected(true);
+		checkboxIsActive.setFont(new Font("Dialog", Font.PLAIN, 16));
+		checkboxIsActive.setFocusable(false);
+		checkboxIsActive.setBackground(new Color(102, 204, 255));
+		checkboxIsActive.setBounds(414, 115, 97, 23);
+		panel2.add(checkboxIsActive);
+
 		JButton btnReset = new JButton("Reset");
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnReset.setBackground(SystemColor.controlText);
@@ -457,6 +469,7 @@ public class ManageSensorUI extends JFrame {
 		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
@@ -465,7 +478,13 @@ public class ManageSensorUI extends JFrame {
 			String sensorName = sensor1.getSensorName();
 			int roomNo = sensor1.getRoomNo();
 			int floorNo = sensor1.getFloorNo();
-			Object[] objs = { sensorId, sensorName, floorNo, roomNo };
+			String isActive;
+			if (sensor1.isActive()) {
+				isActive = "Active";
+			} else {
+				isActive = "Not Active";
+			}
+			Object[] objs = { sensorId, sensorName, isActive, floorNo, roomNo };
 			tableModel.addRow(objs);
 		}
 
@@ -480,6 +499,7 @@ public class ManageSensorUI extends JFrame {
 					txtSensorName.setText(sensor1.getSensorName());
 					txtFloorNo.setText(Integer.toString(sensor1.getFloorNo()));
 					txtRoomNo.setText(Integer.toString(sensor1.getRoomNo()));
+					checkboxIsActive.setSelected(sensor1.isActive());
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e);
 				}
