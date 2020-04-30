@@ -437,7 +437,6 @@ public class ManageSensorUI extends JFrame {
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -469,7 +468,6 @@ public class ManageSensorUI extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
-		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
 		for (com.rmi.Sensor sensor1 : sensorsList) {
 			String sensorId = sensor1.getSensorId();
