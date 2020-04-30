@@ -162,8 +162,16 @@ public class ManageSensorUI extends JFrame {
 							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
 							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
 							sensor.setActive(checkboxIsActive.isSelected());
-							iSensorService.addSensor(sensor);
-							JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
+							boolean status = iSensorService.addSensor(sensor);
+							if (!status) {
+								JOptionPane.showMessageDialog(null,
+										"Sensor ID already exists! Please try again with a unique Sensor ID.",
+										"Insert Error!", JOptionPane.ERROR_MESSAGE);
+								txtSensorId.setText(null);
+							} else {
+								JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
+								resetFields();
+							}
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Fill all the fields and try again!", "Insert Error!",
@@ -172,7 +180,6 @@ public class ManageSensorUI extends JFrame {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				} finally {
-					resetFields();
 					try {
 						displayTable();
 					} catch (IOException e1) {
@@ -206,6 +213,7 @@ public class ManageSensorUI extends JFrame {
 							sensor.setActive(checkboxIsActive.isSelected());
 							iSensorService.updateSensor(sensor.getSensorId(), sensor);
 							JOptionPane.showMessageDialog(null, "Sensor updated sucessfully.");
+							resetFields();
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Fill all the fields and try again!", "Update Error!",
@@ -215,7 +223,6 @@ public class ManageSensorUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Please select any sensor to update.", "WARNING!",
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
-					resetFields();
 					try {
 						displayTable();
 					} catch (IOException e1) {
@@ -247,12 +254,12 @@ public class ManageSensorUI extends JFrame {
 							sensor.setSensorId(txtSensorId.getText());
 							iSensorService.removeSensor(sensor.getSensorId());
 							JOptionPane.showMessageDialog(null, "Sensor deleted sucessfully.");
+							resetFields();
 						}
 					}
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "WARNING!", JOptionPane.ERROR_MESSAGE);
 				} finally {
-					resetFields();
 					try {
 						displayTable();
 					} catch (IOException e) {
@@ -437,6 +444,7 @@ public class ManageSensorUI extends JFrame {
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;

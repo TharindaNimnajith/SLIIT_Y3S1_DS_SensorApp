@@ -27,7 +27,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 	}
 
 	@Override
-	public void addSensor(Sensor sensor) throws RemoteException, IOException {
+	public boolean addSensor(Sensor sensor) throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL object = new URL(url);
 
@@ -60,6 +60,9 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 				sb.append(line + "\n");
 			}
 			br.close();
+			return true;
+		} else {
+			return false;
 		}
 	}
 

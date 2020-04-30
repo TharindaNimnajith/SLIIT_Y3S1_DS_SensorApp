@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface ISensorServerRMI extends Remote {
 
-	public void addSensor(Sensor sensor) throws RemoteException, IOException;
+	public boolean addSensor(Sensor sensor) throws RemoteException, IOException;
 
 	public void updateSensor(String sensorId, Sensor sensor) throws RemoteException, IOException;
 

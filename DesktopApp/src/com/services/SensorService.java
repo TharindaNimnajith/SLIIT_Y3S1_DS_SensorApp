@@ -14,8 +14,8 @@ public class SensorService implements ISensorService {
 	}
 
 	@Override
-	public void addSensor(com.rmi.Sensor sensor) throws RemoteException, IOException {
-		sensorServerRMI.addSensor(sensor);
+	public boolean addSensor(com.rmi.Sensor sensor) throws RemoteException, IOException {
+		return sensorServerRMI.addSensor(sensor);
 	}
 
 	@Override

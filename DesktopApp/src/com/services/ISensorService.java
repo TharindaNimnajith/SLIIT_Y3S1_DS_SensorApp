@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface ISensorService {
 
-	public void addSensor(com.rmi.Sensor sensor) throws RemoteException, IOException;
+	public boolean addSensor(com.rmi.Sensor sensor) throws RemoteException, IOException;
 
 	public void updateSensor(String sensorId, com.rmi.Sensor sensor) throws RemoteException, IOException;
 
