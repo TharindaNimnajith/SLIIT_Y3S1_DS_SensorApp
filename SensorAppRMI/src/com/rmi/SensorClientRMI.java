@@ -7,12 +7,14 @@ import java.rmi.registry.Registry;
 
 public class SensorClientRMI {
 
+	private int clients = 0;
+
 	public SensorClientRMI() {
 		super();
 		try {
 			Registry registry = LocateRegistry.getRegistry("localhost", Registry.REGISTRY_PORT);
 			ISensorServerRMI iSensorServerRMI = (ISensorServerRMI) registry.lookup("rmi://localhost/server");
-			System.out.println("Clients: " + iSensorServerRMI.increment());
+			clients = iSensorServerRMI.increment();
 		} catch (RemoteException remoteException) {
 			System.err.println(remoteException.getMessage());
 			remoteException.printStackTrace();
@@ -23,5 +25,9 @@ public class SensorClientRMI {
 			System.err.println(exception.getMessage());
 			exception.printStackTrace();
 		}
+	}
+
+	public void displayClientNo() {
+		System.out.println("Clients: " + clients);
 	}
 }

@@ -519,6 +519,7 @@ public class ManageSensorUI extends JFrame {
 			public void run() {
 				try {
 					SensorClientRMI sensorClientRMI = new SensorClientRMI();
+					sensorClientRMI.displayClientNo();
 					SensorDetailsUI frame = new SensorDetailsUI();
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
