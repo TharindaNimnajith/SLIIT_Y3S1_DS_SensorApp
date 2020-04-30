@@ -39,7 +39,8 @@ public class SensorDetailsUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
-	static int status = 0;
+
+	public static int status = 0;
 
 	public SensorDetailsUI() throws IOException {
 		setTitle("Sensor Details");
@@ -174,9 +175,8 @@ public class SensorDetailsUI extends JFrame {
 							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
 					if (status == 1) {
-						JOptionPane.showMessageDialog(null,
-								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
-								JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
+								"WARNING!", JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",

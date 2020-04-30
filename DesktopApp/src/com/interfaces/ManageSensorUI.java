@@ -57,8 +57,6 @@ public class ManageSensorUI extends JFrame {
 	private ISensorService iSensorService = (ISensorService) new SensorService();
 	private ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 
-	static int status = 0;
-
 	public ManageSensorUI() throws IOException {
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
@@ -107,9 +105,8 @@ public class ManageSensorUI extends JFrame {
 						sensorDetailsUI.setVisible(true);
 						disposeFrame();
 						if (SensorDetailsUI.status == 1) {
-							JOptionPane.showMessageDialog(null,
-									"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
-									JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
+									"WARNING!", JOptionPane.WARNING_MESSAGE);
 						}
 					}
 				} catch (Exception e1) {
@@ -436,10 +433,9 @@ public class ManageSensorUI extends JFrame {
 		scrollPane.setBounds(38, 34, 947, 195);
 		panel.add(scrollPane);
 
-		String col[] = { "Sensor ID", "Sensor Name", "Floor No", "Room No" };
+		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -526,10 +522,9 @@ public class ManageSensorUI extends JFrame {
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
 							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
-					if (status == 1) {
-						JOptionPane.showMessageDialog(null,
-								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
-								JOptionPane.WARNING_MESSAGE);
+					if (SensorDetailsUI.status == 1) {
+						JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
+								"WARNING!", JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",

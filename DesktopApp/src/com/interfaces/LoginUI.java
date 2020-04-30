@@ -38,8 +38,6 @@ public class LoginUI extends JFrame {
 	private JPasswordField txtPassword;
 	private JLabel lblUserNotify;
 
-	static int status = 0;
-
 	public LoginUI() {
 		Image img1 = new ImageIcon(this.getClass().getResource("/04.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -239,10 +237,9 @@ public class LoginUI extends JFrame {
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
 							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
-					if (status == 1) {
-						JOptionPane.showMessageDialog(null,
-								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
-								JOptionPane.WARNING_MESSAGE);
+					if (SensorDetailsUI.status == 1) {
+						JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
+								"WARNING!", JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
