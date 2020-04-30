@@ -175,8 +175,9 @@ public class SensorDetailsUI extends JFrame {
 							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
 					if (status == 1) {
-						JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
-								"WARNING!", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",

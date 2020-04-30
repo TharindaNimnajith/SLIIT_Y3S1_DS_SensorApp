@@ -105,8 +105,9 @@ public class ManageSensorUI extends JFrame {
 						sensorDetailsUI.setVisible(true);
 						disposeFrame();
 						if (SensorDetailsUI.status == 1) {
-							JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
-									"WARNING!", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null,
+									"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+									JOptionPane.WARNING_MESSAGE);
 						}
 					}
 				} catch (Exception e1) {
@@ -436,6 +437,7 @@ public class ManageSensorUI extends JFrame {
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0) {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -523,8 +525,9 @@ public class ManageSensorUI extends JFrame {
 							dim.height / 2 - frame.getSize().height / 2);
 					frame.setVisible(true);
 					if (SensorDetailsUI.status == 1) {
-						JOptionPane.showMessageDialog(null, "The CO2 level or smoke level is greater than 5 in a sensor!",
-								"WARNING!", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
