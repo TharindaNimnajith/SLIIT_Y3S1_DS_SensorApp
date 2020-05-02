@@ -6,7 +6,9 @@ import java.util.ArrayList;
 
 public class SensorService implements ISensorService {
 
-	com.rmi.SensorServerRMI sensorServerRMI;
+	private com.rmi.SensorServerRMI sensorServerRMI;
+
+	private ArrayList<com.rmi.Sensor> sensorsList;
 
 	public SensorService() throws RemoteException {
 		super();
@@ -35,6 +37,14 @@ public class SensorService implements ISensorService {
 
 	@Override
 	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException {
-		return sensorServerRMI.getSensorsList();
+		while (true) {
+			try {
+				Thread.sleep(15000);
+				sensorsList = sensorServerRMI.getSensorsList();
+				return sensorsList;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
