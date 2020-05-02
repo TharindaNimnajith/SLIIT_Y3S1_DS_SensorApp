@@ -22,6 +22,8 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 
 	private int count = 0;
 
+	private static ArrayList<Sensor> sensors;
+
 	public SensorServerRMI() throws RemoteException {
 		super();
 	}
@@ -156,8 +158,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		return s1;
 	}
 
-	@Override
-	public ArrayList<Sensor> getSensorsList() throws RemoteException, IOException {
+	public static void getSensorsList() throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL seatURL = new URL(url);
 		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
@@ -169,7 +170,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		}
 		JSONArray jsonObj = new JSONArray(jsonString.toString());
 
-		ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+		sensors = new ArrayList<Sensor>();
 		for (int i = 0; i < jsonObj.length(); i++) {
 			JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
 			Sensor s1 = new Sensor();
@@ -182,6 +183,12 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
 			sensors.add(s1);
 		}
+		
+		System.out.println("ABC");
+	}
+
+	@Override
+	public ArrayList<Sensor> getSensors() throws RemoteException, IOException {
 		return sensors;
 	}
 
@@ -198,9 +205,15 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			SensorServerRMI sensorServerRMI = new SensorServerRMI();
 			registry.rebind("rmi://localhost/server", sensorServerRMI);
 			System.out.println("Sensor server started...");
+			while (true) {
+				Thread.sleep(15000);
+				getSensorsList();
+			}
 		} catch (RemoteException remoteException) {
 			System.err.println(remoteException.getMessage());
 			remoteException.printStackTrace();
+		} catch (InterruptedException interruptedException) {
+			interruptedException.printStackTrace();
 		} catch (Exception exception) {
 			System.err.println(exception.getMessage());
 			exception.printStackTrace();

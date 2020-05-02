@@ -8,8 +8,6 @@ public class SensorService implements ISensorService {
 
 	private com.rmi.SensorServerRMI sensorServerRMI;
 
-	private ArrayList<com.rmi.Sensor> sensorsList;
-
 	public SensorService() throws RemoteException {
 		super();
 		sensorServerRMI = new com.rmi.SensorServerRMI();
@@ -37,14 +35,6 @@ public class SensorService implements ISensorService {
 
 	@Override
 	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException {
-		while (true) {
-			try {
-				Thread.sleep(15000);
-				sensorsList = sensorServerRMI.getSensorsList();
-				return sensorsList;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		return sensorServerRMI.getSensors();
 	}
 }
