@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 
+// sensor list component
 class SensorList extends Component {
   constructor(props) {
     super(props);
@@ -9,6 +10,7 @@ class SensorList extends Component {
       sensors: [
         {
           id: "2",
+          name: "abc",
           active: true,
           floorNo: 3,
           roomNo: 1,
@@ -17,6 +19,7 @@ class SensorList extends Component {
         },
         {
           id: "4",
+          name: "xyz",
           active: false,
           floorNo: 1,
           roomNo: 2,
@@ -59,6 +62,7 @@ class SensorList extends Component {
           <thead className="thead-light">
           <tr>
             <th>Sensor ID</th>
+            <th>Sensor Name</th>
             <th>Active Status</th>
             <th>Floor Number</th>
             <th>Room Number</th>
@@ -71,6 +75,7 @@ class SensorList extends Component {
               return (sensor.smokeLevel > 5 || sensor.co2Level > 5) ? (
                 <tr bgcolor="#FF0000" style={{color: 'White'}} key={sensor.id}>
                   <td>{sensor.id}</td>
+                  <td>{sensor.name}</td>
                   <td>{sensor.active ? "Active" : "Not Active"}</td>
                   <td>{sensor.floorNo}</td>
                   <td>{sensor.roomNo}</td>
@@ -78,6 +83,7 @@ class SensorList extends Component {
                   <td>{sensor.co2Level}</td>
                 </tr>) : (<tr bgcolor='White' key={sensor.id}>
                 <td>{sensor.id}</td>
+                <td>{sensor.name}</td>
                 <td>{sensor.active ? "Active" : "Not Active"}</td>
                 <td>{sensor.floorNo}</td>
                 <td>{sensor.roomNo}</td>
