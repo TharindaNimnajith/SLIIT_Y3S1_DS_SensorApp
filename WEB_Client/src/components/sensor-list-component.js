@@ -27,6 +27,7 @@ class SensorList extends Component {
     };
   }
 
+  // get sensor list from mongodb via the express api
   getSensorList() {
     axios
       .get("http://localhost:5000/api/sensor")
@@ -39,6 +40,7 @@ class SensorList extends Component {
       });
   }
 
+  // refresh table every 40 seconds
   componentDidMount() {
     this.interval = setInterval(() => this.getSensorList(), 40000);
   }
@@ -47,6 +49,8 @@ class SensorList extends Component {
     clearInterval(this.interval);
   }
 
+  // display the table and values of each sensor
+  // if co2 level or smoke level of a sensor is greater than 5, color that row in red
   render() {
     return (
       <div>

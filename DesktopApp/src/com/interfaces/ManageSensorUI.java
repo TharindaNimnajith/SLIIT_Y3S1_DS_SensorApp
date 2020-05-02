@@ -41,6 +41,7 @@ import com.rmi.SensorClientRMI;
 import com.services.ISensorService;
 import com.services.SensorService;
 
+// manage sensor details user interface jframe
 public class ManageSensorUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -57,7 +58,10 @@ public class ManageSensorUI extends JFrame {
 	private ISensorService iSensorService = (ISensorService) new SensorService();
 	private ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 
+	// defining properties of all the design elements of the manage senssor details
+	// user interface
 	public ManageSensorUI() throws IOException {
+		// images
 		Image img1 = new ImageIcon(this.getClass().getResource("/10.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/11.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
@@ -85,6 +89,7 @@ public class ManageSensorUI extends JFrame {
 		panel3.setLayout(null);
 		contentPane.add(panel3);
 
+		// logout button
 		JButton btnLogout = new JButton("Log Out");
 		btnLogout.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 		btnLogout.setBounds(885, 25, 113, 35);
@@ -98,12 +103,18 @@ public class ManageSensorUI extends JFrame {
 				try {
 					if (JOptionPane.showConfirmDialog(null, "Do you really want to logout?", "Logout Confirmation",
 							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						// creating an instance of the sensor details jframe
 						SensorDetailsUI sensorDetailsUI = new SensorDetailsUI();
+						// centering the jframe in the screen
 						Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 						sensorDetailsUI.setLocation(dim.width / 2 - sensorDetailsUI.getSize().width / 2,
 								dim.height / 2 - sensorDetailsUI.getSize().height / 2);
+						// displaying the jframe
 						sensorDetailsUI.setVisible(true);
+						// disposing the current jframe
 						disposeFrame();
+						// display warning message if a sensor co2 level or smoke level is greater than
+						// 5
 						if (SensorDetailsUI.status == 1) {
 							JOptionPane.showMessageDialog(null,
 									"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
@@ -141,6 +152,7 @@ public class ManageSensorUI extends JFrame {
 		panel.setLayout(null);
 		panelManage.add(panel);
 
+		// add button
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setIcon(new ImageIcon(img6));
 		btnAdd.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -152,16 +164,19 @@ public class ManageSensorUI extends JFrame {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// validations related to insert sensor
 					if (!txtSensorId.getText().isEmpty() && !txtSensorName.getText().isEmpty()
 							&& !txtRoomNo.getText().isEmpty() && !txtFloorNo.getText().isEmpty()) {
 						int action = JOptionPane.showConfirmDialog(null, "Do you really want to add a new sensor?",
 								"Add Sensor", JOptionPane.YES_NO_OPTION);
 						if (action == 0) {
+							// getting the inserted values for the sensor
 							sensor.setSensorId(txtSensorId.getText());
 							sensor.setSensorName(txtSensorName.getText());
 							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
 							sensor.setRoomNo(Integer.parseInt(txtRoomNo.getText()));
 							sensor.setActive(checkboxIsActive.isSelected());
+							// checking for any errors from mongodb such as duplicate sensor id
 							boolean status = iSensorService.addSensor(sensor);
 							if (!status) {
 								JOptionPane.showMessageDialog(null,
@@ -169,6 +184,7 @@ public class ManageSensorUI extends JFrame {
 										"Insert Error!", JOptionPane.ERROR_MESSAGE);
 								txtSensorId.setText(null);
 							} else {
+								// if sensor added successfully
 								JOptionPane.showMessageDialog(null, "Sensor added sucessfully.");
 								resetFields();
 							}
@@ -181,6 +197,7 @@ public class ManageSensorUI extends JFrame {
 					e1.printStackTrace();
 				} finally {
 					try {
+						// refresh jtable after adding a new sensor
 						displayTable();
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -190,6 +207,7 @@ public class ManageSensorUI extends JFrame {
 		});
 		panel.add(btnAdd);
 
+		// update button
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setIcon(new ImageIcon(img1));
 		btnUpdate.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -201,11 +219,13 @@ public class ManageSensorUI extends JFrame {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// validations related to update sensor
 					if (!txtSensorId.getText().isEmpty() && !txtSensorName.getText().isEmpty()
 							&& !txtRoomNo.getText().isEmpty() && !txtFloorNo.getText().isEmpty()) {
 						int action = JOptionPane.showConfirmDialog(null, "Do you really want to update the sensor?",
 								"Update Sensor", JOptionPane.YES_NO_OPTION);
 						if (action == 0) {
+							// getting the new values for the sensor
 							sensor.setSensorId(txtSensorId.getText());
 							sensor.setSensorName(txtSensorName.getText());
 							sensor.setFloorNo(Integer.parseInt(txtFloorNo.getText()));
@@ -224,6 +244,7 @@ public class ManageSensorUI extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
 					try {
+						// refresh jtable after updating an existing sensor
 						displayTable();
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -233,6 +254,7 @@ public class ManageSensorUI extends JFrame {
 		});
 		panel.add(btnUpdate);
 
+		// remove button
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnRemove.setIcon(new ImageIcon(img2));
@@ -244,6 +266,7 @@ public class ManageSensorUI extends JFrame {
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					// validations related to delete sensor
 					if (txtSensorId.getText().isEmpty() == true) {
 						JOptionPane.showMessageDialog(null, "Please select any sensor to remove." + "\n", "WARNING!",
 								JOptionPane.ERROR_MESSAGE);
@@ -261,6 +284,7 @@ public class ManageSensorUI extends JFrame {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "WARNING!", JOptionPane.ERROR_MESSAGE);
 				} finally {
 					try {
+						// refresh jtable after deleting a sensor
 						displayTable();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -270,6 +294,7 @@ public class ManageSensorUI extends JFrame {
 		});
 		panel.add(btnRemove);
 
+		// exit button
 		JButton btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnExit.setIcon(new ImageIcon(img3));
@@ -308,6 +333,7 @@ public class ManageSensorUI extends JFrame {
 		txtSensorId.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				// validating the sensor id
 				String sensorId = txtSensorId.getText();
 				if (!sensorId.matches("[a-zA-Z0-9 ,]+") && !sensorId.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid sensor id with only letters and digits.");
@@ -331,6 +357,7 @@ public class ManageSensorUI extends JFrame {
 		txtSensorName.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				// validating the sensor name
 				String sensorName = txtSensorName.getText();
 				if (!sensorName.matches("[a-zA-Z0-9 ,]+") && !sensorName.isEmpty()) {
 					JOptionPane.showMessageDialog(null,
@@ -361,6 +388,7 @@ public class ManageSensorUI extends JFrame {
 		txtRoomNo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				// validating the room number
 				String roomNo = txtRoomNo.getText();
 				if (!roomNo.matches("[0-9 ,]+") && !roomNo.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid room number.");
@@ -380,6 +408,7 @@ public class ManageSensorUI extends JFrame {
 		txtFloorNo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				// validating the floor number
 				String floorNo = txtFloorNo.getText();
 				if (!floorNo.matches("[0-9 ,]+") && !floorNo.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter a valid floor number.");
@@ -389,6 +418,7 @@ public class ManageSensorUI extends JFrame {
 		});
 		panel2.add(txtFloorNo);
 
+		// is active checkbox
 		checkboxIsActive = new JCheckBox("Is Active");
 		checkboxIsActive.setSelected(true);
 		checkboxIsActive.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -397,6 +427,7 @@ public class ManageSensorUI extends JFrame {
 		checkboxIsActive.setBounds(414, 115, 97, 23);
 		panel2.add(checkboxIsActive);
 
+		// reset button
 		JButton btnReset = new JButton("Reset");
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnReset.setBackground(SystemColor.controlText);
@@ -407,6 +438,7 @@ public class ManageSensorUI extends JFrame {
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					// all necessary validations related to resetting the input fields
 					if (!txtSensorId.getText().isEmpty() || !txtSensorName.getText().isEmpty()
 							|| !txtFloorNo.getText().isEmpty() || !txtRoomNo.getText().isEmpty()) {
 						int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?",
@@ -425,15 +457,18 @@ public class ManageSensorUI extends JFrame {
 		displayTable();
 	}
 
+	// method implementation to get the sensor arraylist from sensor service
 	public ArrayList<com.rmi.Sensor> refreshTable() throws IOException {
 		sensorsList = iSensorService.getSensorsList();
 		return sensorsList;
 	}
 
+	// method implementation to dispose the jframe
 	public void disposeFrame() {
 		super.dispose();
 	}
 
+	// method implementation to display the jtable
 	public void displayTable() throws IOException {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(255, 255, 255));
@@ -476,6 +511,7 @@ public class ManageSensorUI extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
+		// retrieving sensor details from the arraylist and display in the jtable
 		sensorsList = refreshTable();
 		for (com.rmi.Sensor sensor1 : sensorsList) {
 			String sensorId = sensor1.getSensorId();
@@ -492,13 +528,17 @@ public class ManageSensorUI extends JFrame {
 			tableModel.addRow(objs);
 		}
 
+		// triggers when click on a specific row of the jtable
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
+					// get the sensor id of the selected row
 					int row = table.getSelectedRow();
 					String sensorId = (table.getModel().getValueAt(row, 0)).toString();
+					// retrieve the details of the sensor with that sensor id
 					com.rmi.Sensor sensor1 = iSensorService.getSensor(sensorId);
+					// set the sensor details in the input fields
 					txtSensorId.setText(sensor1.getSensorId());
 					txtSensorName.setText(sensor1.getSensorName());
 					txtFloorNo.setText(Integer.toString(sensor1.getFloorNo()));
@@ -513,6 +553,7 @@ public class ManageSensorUI extends JFrame {
 		scrollPane.setViewportView(table);
 	}
 
+	// reset input fields to empty
 	public void resetFields() {
 		txtSensorId.setText(null);
 		txtSensorName.setText(null);
@@ -520,32 +561,42 @@ public class ManageSensorUI extends JFrame {
 		txtRoomNo.setText(null);
 	}
 
+	// main method implementation
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					// display the client no from rmi client
 					SensorClientRMI sensorClientRMI = new SensorClientRMI();
 					sensorClientRMI.displayClientNo();
+					// creating an instance of the sensor details jframe
 					SensorDetailsUI frame = new SensorDetailsUI();
+					// centering the jframe in the screen
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
 							dim.height / 2 - frame.getSize().height / 2);
+					// displaying the jframe
 					frame.setVisible(true);
+					// display warning message if a sensor co2 level or smoke level is greater than
+					// 5
 					if (SensorDetailsUI.status == 1) {
 						JOptionPane.showMessageDialog(null,
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
+					// catch a connection exception due to not starting the rest api
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
 							"WARNING!", JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (JSONException e) {
+					// catch a json exception due to corrupted data in mongodb
 					JOptionPane.showMessageDialog(null,
 							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
 							JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (Exception e) {
+					// catch any other runtime exceptions
 					e.printStackTrace();
 				}
 			}

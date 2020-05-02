@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+// rmi server class
 public class SensorServerRMI extends UnicastRemoteObject implements ISensorServerRMI {
 
 	private static final long serialVersionUID = 1L;
@@ -28,11 +29,13 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		super();
 	}
 
+	// method implementation to insert a sensor to mongodb
 	@Override
 	public boolean addSensor(Sensor sensor) throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL object = new URL(url);
 
+		// creating http post request to send to rest api
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();
 		con.setDoOutput(true);
 		con.setDoInput(true);
@@ -40,6 +43,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		con.setRequestProperty("Accept", "application/json");
 		con.setRequestMethod("POST");
 
+		// adding attributes of a sensor and creating a json object
 		JSONObject obj = new JSONObject();
 		obj.put("smokeLevel", sensor.getSmokeLevel());
 		obj.put("co2Level", sensor.getCO2Level());
@@ -56,23 +60,30 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		StringBuilder sb = new StringBuilder();
 		int HttpResult = con.getResponseCode();
 		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			// if http response code for OK (200) returns from the rest api
+			// if the inserting operation is successful
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				sb.append(line + "\n");
 			}
 			br.close();
+			// return true if the inserting operation is successful
 			return true;
 		} else {
+			// if http response code for OK (200) does not return from the rest api
+			// return false if the inserting operation is not successful
 			return false;
 		}
 	}
 
+	// method implementation to update a sensor in mongodb
 	@Override
 	public void updateSensor(String sensorId, Sensor sensor) throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
 		URL object = new URL(url);
 
+		// creating http put request to send to rest api
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();
 		con.setDoOutput(true);
 		con.setDoInput(true);
@@ -80,6 +91,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		con.setRequestProperty("Accept", "application/json");
 		con.setRequestMethod("PUT");
 
+		// adding attributes of a sensor and creating a json object
 		JSONObject obj = new JSONObject();
 		obj.put("smokeLevel", sensor.getSmokeLevel());
 		obj.put("co2Level", sensor.getCO2Level());
@@ -96,6 +108,8 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		StringBuilder sb = new StringBuilder();
 		int HttpResult = con.getResponseCode();
 		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			// if http response code for OK (200) returns from the rest api
+			// if the update operation is successful
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
 			String line = null;
 			while ((line = br.readLine()) != null) {
@@ -105,11 +119,13 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		}
 	}
 
+	// method implementation to delete a sensor from mongodb
 	@Override
 	public void removeSensor(String sensorId) throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
 		URL object = new URL(url);
 
+		// creating http delete request to send to rest api
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();
 		con.setDoOutput(true);
 		con.setDoInput(true);
@@ -122,6 +138,8 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		StringBuilder sb = new StringBuilder();
 		int HttpResult = con.getResponseCode();
 		if (HttpResult == HttpURLConnection.HTTP_OK) {
+			// if http response code for OK (200) returns from the rest api
+			// if the delete operation is successful
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
 			String line = null;
 			while ((line = br.readLine()) != null) {
@@ -131,6 +149,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		}
 	}
 
+	// method implementation to retrieve a sensor from mongodb
 	@Override
 	public Sensor getSensor(String sensorId) throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/" + sensorId;
@@ -143,10 +162,14 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			jsonString.append(readAPIResponse);
 		}
 
+		// filtering the correct sensor instance from sensor id
+		// converting the retrieved json object data to correct format to get sensor
+		// details
 		JSONObject jsonObj = new JSONObject(jsonString.toString());
 		String obj = jsonObj.get(sensorId).toString();
 		JSONObject jsonObj2 = new JSONObject(obj);
 
+		// assigning the sensor details to a sensor object from the json object
 		Sensor s1 = new Sensor();
 		s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
 		s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
@@ -155,9 +178,11 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		s1.setSensorId(jsonObj2.get("id").toString());
 		s1.setSensorName(jsonObj2.get("name").toString());
 		s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+		// return the sensor object
 		return s1;
 	}
 
+	// method implementation to retrieve all sensors from mongodb
 	public static void getSensorsList() throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL seatURL = new URL(url);
@@ -168,11 +193,14 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 		while ((readAPIResponse = br.readLine()) != null) {
 			jsonString.append(readAPIResponse);
 		}
+		// converting the the rest api response to a json array
 		JSONArray jsonObj = new JSONArray(jsonString.toString());
 
 		sensors = new ArrayList<Sensor>();
 		for (int i = 0; i < jsonObj.length(); i++) {
+			// retrieving sensors to json objects from json array
 			JSONObject jsonObj2 = (JSONObject) jsonObj.get(i);
+			// assigning sensor details to a sensor object from the json object
 			Sensor s1 = new Sensor();
 			s1.setActive(Boolean.parseBoolean(jsonObj2.get("active").toString()));
 			s1.setCO2Level(Integer.parseInt(jsonObj2.get("co2Level").toString()));
@@ -181,30 +209,38 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			s1.setSensorId(jsonObj2.get("id").toString());
 			s1.setSensorName(jsonObj2.get("name").toString());
 			s1.setSmokeLevel(Integer.parseInt(jsonObj2.get("smokeLevel").toString()));
+			// adding each sensor object to an arraylist
 			sensors.add(s1);
 		}
-		
+
 		System.out.println("ABC");
 	}
 
+	// method implementation to return the arraylist with all sensors
 	@Override
 	public ArrayList<Sensor> getSensors() throws RemoteException, IOException {
 		return sensors;
 	}
 
+	// method implementation to increment the number of rmi clients
 	@Override
 	public synchronized int increment() throws RemoteException {
 		count++;
 		return count;
 	}
 
+	// implementation of the main method
 	public static void main(String[] args) {
+		// including the allowall.policy file giving all permissions
 		System.setProperty("java.security.policy", "file:allowall.policy");
 		try {
+			// creating and starting the 1099 registry port and binding the created registry
 			Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 			SensorServerRMI sensorServerRMI = new SensorServerRMI();
 			registry.rebind("rmi://localhost/server", sensorServerRMI);
 			System.out.println("Sensor server started...");
+			// checking the sensor status every 15 seconds to get the up to date readings
+			// from the rest api
 			while (true) {
 				Thread.sleep(15000);
 				getSensorsList();

@@ -1,5 +1,7 @@
 package com.rmi;
 
+// sensor model class 
+// includes getters, setters, constructors and attributes of a sensor
 public class Sensor {
 
 	private String sensorId;

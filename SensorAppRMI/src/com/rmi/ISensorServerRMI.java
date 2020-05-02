@@ -5,6 +5,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+// interface for the rmi server with method declarations
 public interface ISensorServerRMI extends Remote {
 
 	public boolean addSensor(Sensor sensor) throws RemoteException, IOException;

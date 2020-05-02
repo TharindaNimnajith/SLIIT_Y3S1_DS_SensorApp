@@ -29,6 +29,7 @@ import org.json.JSONException;
 
 import com.rmi.SensorClientRMI;
 
+// login user interface jframe
 public class LoginUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -38,7 +39,9 @@ public class LoginUI extends JFrame {
 	private JPasswordField txtPassword;
 	private JLabel lblUserNotify;
 
+	// defining properties of all the design elements of the login user interface
 	public LoginUI() {
+		// images
 		Image img1 = new ImageIcon(this.getClass().getResource("/04.png")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/07.png")).getImage();
 		Image img3 = new ImageIcon(this.getClass().getResource("/05.png")).getImage();
@@ -66,6 +69,7 @@ public class LoginUI extends JFrame {
 		lblUserLogin.setIcon(new ImageIcon(img5));
 		frmLoginSystem.getContentPane().add(lblUserLogin);
 
+		// login button
 		JButton btnLogin = new JButton("Login");
 		btnLogin.setIcon(new ImageIcon(img3));
 		btnLogin.setForeground(new Color(224, 255, 255));
@@ -79,6 +83,7 @@ public class LoginUI extends JFrame {
 				String username = "admin";
 				String password = "admin123";
 				try {
+					// all the necessary validations related to administrator login
 					if (String.valueOf(txtPassword.getPassword()).isEmpty() | txtUsername.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Please fill login details!", "Login Error!",
 								JOptionPane.ERROR_MESSAGE);
@@ -91,6 +96,8 @@ public class LoginUI extends JFrame {
 						JOptionPane.showMessageDialog(null, "Logged in sucessfully!");
 						frmLoginSystem.dispose();
 						disposeFrame();
+						// if login credentials are correct and pass all validations, navigate the user
+						// to manage sensor details user interface
 						ManageSensorUI manageSensorUI = new ManageSensorUI();
 						manageSensorUI.setVisible(true);
 					} else {
@@ -106,6 +113,7 @@ public class LoginUI extends JFrame {
 		});
 		frmLoginSystem.getContentPane().add(btnLogin);
 
+		// reset button
 		JButton btnReset = new JButton("Reset");
 		btnReset.setIcon(new ImageIcon(img4));
 		btnReset.setForeground(new Color(224, 255, 255));
@@ -117,6 +125,7 @@ public class LoginUI extends JFrame {
 		btnReset.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
+				// necessary validations
 				if (!txtUsername.getText().isEmpty() || !txtPassword.getText().isEmpty()) {
 					int action = JOptionPane.showConfirmDialog(null, "Do you really want to reset data?", "Reset Data",
 							JOptionPane.YES_NO_OPTION);
@@ -129,6 +138,7 @@ public class LoginUI extends JFrame {
 		});
 		frmLoginSystem.getContentPane().add(btnReset);
 
+		// exit button
 		JButton btnExit = new JButton(" Exit");
 		btnExit.setIcon(new ImageIcon(img2));
 		btnExit.setForeground(new Color(224, 255, 255));
@@ -166,6 +176,7 @@ public class LoginUI extends JFrame {
 		txtUsername.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
+				// checking whether username is valid
 				String userName = txtUsername.getText();
 				if (!userName.matches("[a-zA-Z0-9 ,]+")) {
 					lblUserNotify.setText("Please enter a valid username.");
@@ -218,41 +229,53 @@ public class LoginUI extends JFrame {
 		frmLoginSystem.setUndecorated(true);
 	}
 
+	// displaying the jframe
 	public void displayFrame() {
 		LoginUI window = new LoginUI();
 		window.frmLoginSystem.setVisible(true);
 	}
 
+	// disposing the jframe
 	public void disposeFrame() {
 		super.dispose();
 	}
 
+	// main method implementation
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					// display the client no from rmi client
 					SensorClientRMI sensorClientRMI = new SensorClientRMI();
 					sensorClientRMI.displayClientNo();
+					// creating an instance of the sensor details jframe
 					SensorDetailsUI frame = new SensorDetailsUI();
+					// centering the jframe in the screen
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
 							dim.height / 2 - frame.getSize().height / 2);
+					// displaying the jframe
 					frame.setVisible(true);
+					// display warning message if a sensor co2 level or smoke level is greater than
+					// 5
 					if (SensorDetailsUI.status == 1) {
 						JOptionPane.showMessageDialog(null,
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
+					// catch a connection exception due to not starting the rest api
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
 							"WARNING!", JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (JSONException e) {
+					// catch a json exception due to corrupted data in mongodb
 					JOptionPane.showMessageDialog(null,
 							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
 							JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (Exception e) {
+					// catch any other runtime exceptions
 					e.printStackTrace();
 				}
 			}

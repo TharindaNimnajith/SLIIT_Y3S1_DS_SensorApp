@@ -34,6 +34,7 @@ import com.rmi.SensorClientRMI;
 import com.services.ISensorService;
 import com.services.SensorService;
 
+// sensor details user interface jframe
 public class SensorDetailsUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -42,6 +43,8 @@ public class SensorDetailsUI extends JFrame {
 
 	public static int status = 0;
 
+	// defining properties of all the design elements of the display sensor details
+	// user interface
 	public SensorDetailsUI() throws IOException {
 		setTitle("Sensor Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +67,7 @@ public class SensorDetailsUI extends JFrame {
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));
 		panel_1.add(scrollPane);
 
+		// table design
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No", "CO2 Level", "Smoke Level" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 		JTable table = new JTable(tableModel);
@@ -88,6 +92,7 @@ public class SensorDetailsUI extends JFrame {
 		table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 
+		// retrieving sensor details from the arraylist and display in the jtable
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
 		for (com.rmi.Sensor sensor1 : sensorsList) {
@@ -105,6 +110,7 @@ public class SensorDetailsUI extends JFrame {
 			}
 			Object[] objs = { sensorId, sensorName, isActive, floorNo, roomNo, CO2Level, smokeLevel };
 			tableModel.addRow(objs);
+			// checking the co2 level and smoke level of sonsors to show the warning message
 			if (CO2Level > 5 || smokeLevel > 5) {
 				status = 1;
 			}
@@ -119,6 +125,7 @@ public class SensorDetailsUI extends JFrame {
 		panel.setLayout(null);
 		panel_1.add(panel);
 
+		// login button
 		JButton btnLogin = new JButton("Log in");
 		btnLogin.setBounds(617, 17, 113, 33);
 		btnLogin.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
@@ -153,6 +160,7 @@ public class SensorDetailsUI extends JFrame {
 		panel.add(lblTopic);
 	}
 
+	// getting the arraylist of all the sensors from sensor service
 	public ArrayList<com.rmi.Sensor> refreshTable() throws IOException {
 		ISensorService iSensorService = (ISensorService) new SensorService();
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
@@ -160,36 +168,47 @@ public class SensorDetailsUI extends JFrame {
 		return sensorsList;
 	}
 
+	// disposing the jframe
 	public void disposeFrame() {
 		super.dispose();
 	}
 
+	// main method implementation
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					// display the client no from rmi client
 					SensorClientRMI sensorClientRMI = new SensorClientRMI();
 					sensorClientRMI.displayClientNo();
+					// creating an instance of the jframe
 					SensorDetailsUI frame = new SensorDetailsUI();
+					// centering the jframe in the screen
 					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 					frame.setLocation(dim.width / 2 - frame.getSize().width / 2,
 							dim.height / 2 - frame.getSize().height / 2);
+					// displaying the jframe
 					frame.setVisible(true);
+					// display warning message if a sensor co2 level or smoke level is greater than
+					// 5
 					if (status == 1) {
 						JOptionPane.showMessageDialog(null,
 								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (ConnectException e) {
+					// catch a connection exception due to not starting the rest api
 					JOptionPane.showMessageDialog(null, "Connection failed! Connect to REST API and try again!",
 							"WARNING!", JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (JSONException e) {
+					// catch a json exception due to corrupted data in mongodb
 					JOptionPane.showMessageDialog(null,
 							"JSON object isuue! Check for corrupted data in the database and try again!", "WARNING!",
 							JOptionPane.WARNING_MESSAGE);
 					e.printStackTrace();
 				} catch (Exception e) {
+					// catch any other runtime exceptions
 					e.printStackTrace();
 				}
 			}

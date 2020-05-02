@@ -3,12 +3,15 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 var cors = require("cors");
 
+require("dotenv").config();
+
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 
+// defining the route
 app.use("/api", require("./routes/sensor-routes"));
 
 app.use(function (err, req, res, next) {
@@ -16,7 +19,8 @@ app.use(function (err, req, res, next) {
   res.status(422).send({error: err.message});
 });
 
-const uri = 'mongodb+srv://ayesh:ayesh@ayesh-mongo-cluster-jqsxb.mongodb.net/sliit-y3s1-ds-restAPI?retryWrites=true&w=majority';
+// getting the mongodb atlas uri from the .env file
+const uri = process.env.MONGO_ATLAS;
 
 const options = {
   useNewUrlParser: true,
@@ -24,6 +28,7 @@ const options = {
   useCreateIndex: true
 };
 
+// connecting to mongodb with mongoose
 mongoose
   .connect(uri, options)
   .then(() => {

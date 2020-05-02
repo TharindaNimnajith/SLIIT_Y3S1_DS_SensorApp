@@ -5,6 +5,7 @@ const nodeailer = require("nodemailer");
 
 require("dotenv").config();
 
+// sending emails with nodemailer package
 let transporter = nodeailer.createTransport({
   service: "gmail",
   auth: {
@@ -13,6 +14,7 @@ let transporter = nodeailer.createTransport({
   },
 });
 
+// adding a new sensor
 router.post("/sensor", (req, res, next) => {
   Sensor.create(req.body)
     .then((sensor) => {
@@ -21,12 +23,14 @@ router.post("/sensor", (req, res, next) => {
     .catch(next);
 });
 
+// updating a sensor by sensor id
 router.put("/sensor/:id", (req, res, next) => {
   Sensor.findOneAndUpdate(
     {id: req.params.id},
     {$set: req.body},
     {new: true},
     (error, doc) => {
+      // sending emails and sms messages according to the smoke level and co2 level of each sensor
       if (doc.co2Level > 5 && doc.smokeLevel > 5) {
         let info = {
           from: '"Sensor Alerts 💥🔥" ayeshlak1998@gmail.com',
@@ -81,12 +85,14 @@ router.put("/sensor/:id", (req, res, next) => {
   );
 });
 
+// retrieving all sensors
 router.get("/sensor", (req, res, next) => {
   Sensor.find({}, (err, sensors) => {
     res.send(sensors);
   }).catch(next);
 });
 
+// retrieving all sensors
 router.get("/sensors", (req, res, next) => {
   Sensor.find({}, (err, sensors) => {
     var sensorMap = {};
@@ -97,6 +103,7 @@ router.get("/sensors", (req, res, next) => {
   }).catch(next);
 });
 
+// retrieving a sensor by sensor id
 router.get("/sensor/:id", (req, res, next) => {
   Sensor.find({id: req.params.id}, (err, sensors) => {
     var sensorMap = {};
@@ -107,6 +114,7 @@ router.get("/sensor/:id", (req, res, next) => {
   }).catch(next);
 });
 
+// deleting a sensor by sensor id
 router.delete("/sensor/:id", (req, res, next) => {
   Sensor.deleteOne({id: req.params.id}, (err, result) => {
     if (result.deletedCount) {
