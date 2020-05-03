@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -40,8 +41,12 @@ public class SensorDetailsUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
+	private JScrollPane scrollPane;
 
 	public static int status = 0;
+
+	private Timer timer;
+	private final static int INTERVAL = 30000;
 
 	// defining properties of all the design elements of the display sensor details
 	// user interface
@@ -61,13 +66,71 @@ public class SensorDetailsUI extends JFrame {
 		panel_1.setLayout(null);
 		getContentPane().add(panel_1);
 
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 89, 723, 329);
 		scrollPane.setBackground(new Color(255, 255, 255));
 		scrollPane.setFont(new Font("Tahoma", Font.BOLD, 25));
 		panel_1.add(scrollPane);
 
-		// table design
+		JPanel panel = new JPanel();
+		panel.setForeground(UIManager.getColor("CheckBoxMenuItem.selectionForeground"));
+		panel.setBackground(SystemColor.textHighlight);
+		panel.setBounds(0, 0, 742, 68);
+		panel.setLayout(null);
+		panel_1.add(panel);
+
+		// login button
+		JButton btnLogin = new JButton("Log in");
+		btnLogin.setBounds(617, 17, 113, 33);
+		btnLogin.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		btnLogin.setForeground(new Color(0, 0, 0));
+		btnLogin.setBackground(new Color(204, 204, 204));
+		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnLogin.setFocusable(false);
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (JOptionPane.showConfirmDialog(null,
+							"Confirm if you really want to navigate to the login window.",
+							"Login window navigation confirmation",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						LoginUI loginUI = new LoginUI();
+						loginUI.displayFrame();
+						disposeFrame();
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		panel.add(btnLogin);
+
+		JLabel lblTopic = new JLabel("Sensor Details");
+		lblTopic.setBounds(0, 11, 740, 57);
+		lblTopic.setBackground(UIManager.getColor("menu"));
+		lblTopic.setForeground(SystemColor.textHighlightText);
+		lblTopic.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTopic.setFont(new Font("Showcard Gothic", Font.BOLD, 30));
+		panel.add(lblTopic);
+
+		displayTable();
+
+		// refresh the table every 30 seconds
+		timer = new Timer(INTERVAL, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					displayTable();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		timer.start();
+	}
+
+	public void displayTable() throws IOException {
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No", "CO2 Level", "Smoke Level" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
 		JTable table = new JTable(tableModel);
@@ -117,47 +180,6 @@ public class SensorDetailsUI extends JFrame {
 		}
 
 		scrollPane.setViewportView(table);
-
-		JPanel panel = new JPanel();
-		panel.setForeground(UIManager.getColor("CheckBoxMenuItem.selectionForeground"));
-		panel.setBackground(SystemColor.textHighlight);
-		panel.setBounds(0, 0, 742, 68);
-		panel.setLayout(null);
-		panel_1.add(panel);
-
-		// login button
-		JButton btnLogin = new JButton("Log in");
-		btnLogin.setBounds(617, 17, 113, 33);
-		btnLogin.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
-		btnLogin.setForeground(new Color(0, 0, 0));
-		btnLogin.setBackground(new Color(204, 204, 204));
-		btnLogin.setFont(new Font("Tahoma", Font.BOLD, 16));
-		btnLogin.setFocusable(false);
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (JOptionPane.showConfirmDialog(null,
-							"Confirm if you really want to navigate to the login window.",
-							"Login window navigation confirmation",
-							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
-						LoginUI loginUI = new LoginUI();
-						loginUI.displayFrame();
-						disposeFrame();
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		panel.add(btnLogin);
-
-		JLabel lblTopic = new JLabel("Sensor Details");
-		lblTopic.setBounds(0, 11, 740, 57);
-		lblTopic.setBackground(UIManager.getColor("menu"));
-		lblTopic.setForeground(SystemColor.textHighlightText);
-		lblTopic.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTopic.setFont(new Font("Showcard Gothic", Font.BOLD, 30));
-		panel.add(lblTopic);
 	}
 
 	// getting the arraylist of all the sensors from sensor service
@@ -165,6 +187,7 @@ public class SensorDetailsUI extends JFrame {
 		ISensorService iSensorService = (ISensorService) new SensorService();
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = iSensorService.getSensorsList();
+		System.out.println(sensorsList);
 		return sensorsList;
 	}
 

@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Sensor = require("../models/sensor-model");
-const nodeailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 
 require("dotenv").config();
 
 // sending emails with nodemailer package
-let transporter = nodeailer.createTransport({
+let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ayeshlak1998@gmail.com",

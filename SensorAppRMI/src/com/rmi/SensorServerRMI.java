@@ -23,7 +23,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 
 	private int count = 0;
 
-	private static ArrayList<Sensor> sensors;
+	public static ArrayList<Sensor> sensors;
 
 	public SensorServerRMI() throws RemoteException {
 		super();
@@ -183,7 +183,7 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 	}
 
 	// method implementation to retrieve all sensors from mongodb
-	public static void getSensorsList() throws RemoteException, IOException {
+	public static ArrayList<Sensor> getSensorsList() throws RemoteException, IOException {
 		String url = "http://localhost:5000/api/sensor/";
 		URL seatURL = new URL(url);
 		BufferedReader br = new BufferedReader(new InputStreamReader(seatURL.openStream(), Charset.forName("UTF-8")));
@@ -212,13 +212,8 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			// adding each sensor object to an arraylist
 			sensors.add(s1);
 		}
-
-		System.out.println("ABC");
-	}
-
-	// method implementation to return the arraylist with all sensors
-	@Override
-	public ArrayList<Sensor> getSensors() throws RemoteException, IOException {
+		System.out.println(sensors);
+		// return all retrieved sensors in an arraylist
 		return sensors;
 	}
 
@@ -239,20 +234,40 @@ public class SensorServerRMI extends UnicastRemoteObject implements ISensorServe
 			SensorServerRMI sensorServerRMI = new SensorServerRMI();
 			registry.rebind("rmi://localhost/server", sensorServerRMI);
 			System.out.println("Sensor server started...");
-			// checking the sensor status every 15 seconds to get the up to date readings
-			// from the rest api
-			while (true) {
-				Thread.sleep(15000);
-				getSensorsList();
-			}
 		} catch (RemoteException remoteException) {
 			System.err.println(remoteException.getMessage());
 			remoteException.printStackTrace();
-		} catch (InterruptedException interruptedException) {
-			interruptedException.printStackTrace();
 		} catch (Exception exception) {
 			System.err.println(exception.getMessage());
 			exception.printStackTrace();
 		}
+		// creating a thread using Thread class and Runnable interface
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						// checking the sensor status every 15 seconds to get the up to date readings
+						// from the rest api
+						Thread.sleep(15000);
+						getSensorsList();
+					} catch (RemoteException remoteException) {
+						System.err.println(remoteException.getMessage());
+						remoteException.printStackTrace();
+					} catch (IOException iOException) {
+						System.err.println(iOException.getMessage());
+						iOException.printStackTrace();
+					} catch (InterruptedException interruptedException) {
+						System.err.println(interruptedException.getMessage());
+						interruptedException.printStackTrace();
+					} catch (Exception exception) {
+						System.err.println(exception.getMessage());
+						exception.printStackTrace();
+					}
+				}
+			}
+		});
+		// starting the thread
+		t.start();
 	}
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import com.rmi.SensorServerRMI;
+
 // sensor service class
 public class SensorService implements ISensorService {
 
@@ -45,6 +47,7 @@ public class SensorService implements ISensorService {
 	// all sensors in mongodb
 	@Override
 	public ArrayList<com.rmi.Sensor> getSensorsList() throws RemoteException, IOException {
-		return sensorServerRMI.getSensors();
+		System.out.println(SensorServerRMI.getSensorsList());
+		return SensorServerRMI.getSensorsList();
 	}
 }

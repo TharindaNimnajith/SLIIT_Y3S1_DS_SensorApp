@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -57,6 +58,9 @@ public class ManageSensorUI extends JFrame {
 	private com.rmi.Sensor sensor = new com.rmi.Sensor();
 	private ISensorService iSensorService = (ISensorService) new SensorService();
 	private ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
+
+	private Timer timer;
+	private final static int INTERVAL = 5000;
 
 	// defining properties of all the design elements of the manage senssor details
 	// user interface
@@ -455,6 +459,20 @@ public class ManageSensorUI extends JFrame {
 		panel.add(btnReset);
 
 		displayTable();
+
+		// refresh the table every second
+		timer = new Timer(INTERVAL, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					displayTable();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		timer.start();
 	}
 
 	// method implementation to get the sensor arraylist from sensor service
