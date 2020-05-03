@@ -460,7 +460,7 @@ public class ManageSensorUI extends JFrame {
 
 		displayTable();
 
-		// refresh the table every second
+		// refresh the table
 		timer = new Timer(INTERVAL, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {

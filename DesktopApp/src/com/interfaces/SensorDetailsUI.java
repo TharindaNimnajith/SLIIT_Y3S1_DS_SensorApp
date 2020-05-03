@@ -44,6 +44,7 @@ public class SensorDetailsUI extends JFrame {
 	private JScrollPane scrollPane;
 
 	public static int status = 0;
+	public static int statusExit = 0;
 
 	private Timer timer;
 	private final static int INTERVAL = 30000;
@@ -55,6 +56,7 @@ public class SensorDetailsUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 768, 483);
 		setResizable(false);
+		statusExit = 0;
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,6 +99,8 @@ public class SensorDetailsUI extends JFrame {
 						LoginUI loginUI = new LoginUI();
 						loginUI.displayFrame();
 						disposeFrame();
+						statusExit = 1;
+						timer.stop();
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -120,6 +124,14 @@ public class SensorDetailsUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					displayTable();
+					if (status == 1 && statusExit == 0) {
+						JOptionPane.showMessageDialog(null,
+								"The CO2 level or smoke level is greater than 5 in a sensor!", "WARNING!",
+								JOptionPane.WARNING_MESSAGE);
+					}
+					if (statusExit == 1) {
+						timer.stop();
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (Exception e1) {
@@ -130,6 +142,7 @@ public class SensorDetailsUI extends JFrame {
 		timer.start();
 	}
 
+	// jtable design
 	public void displayTable() throws IOException {
 		String col[] = { "Sensor ID", "Sensor Name", "Is Active", "Floor No", "Room No", "CO2 Level", "Smoke Level" };
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
@@ -155,6 +168,7 @@ public class SensorDetailsUI extends JFrame {
 		table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 
+		status = 0;
 		// retrieving sensor details from the arraylist and display in the jtable
 		ArrayList<com.rmi.Sensor> sensorsList = new ArrayList<com.rmi.Sensor>();
 		sensorsList = refreshTable();
