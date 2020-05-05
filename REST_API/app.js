@@ -20,7 +20,7 @@ app.use(function (err, req, res, next) {
 });
 
 // getting the mongodb atlas uri from the .env file
-const uri = process.env.MONGO_ATLAS;
+const uri = 'mongodb+srv://ayesh:ayesh@ayesh-mongo-cluster-jqsxb.mongodb.net/sliit-y3s1-ds-restAPI?retryWrites=true&w=majority';
 
 const options = {
   useNewUrlParser: true,

@@ -1,35 +1,40 @@
 
 == Installation == 
 
-1. Download & Install XAMPP. (Not needed if you already have PHP installed)
-https://www.apachefriends.org/index.html
+1. Install node.js and Java 1.8 to your local machine.
 
-2. Download & Install Composer
-https://getcomposer.org/download/
+2. Open a terminal and navigate inside REST_API folder.
+   Run command "npm install".
 
-3. Import the Database to MySQL. (Inside the /database/Dump20190927 folder)
+   To enable email sending feature, open sensor-routes.js file inside routes folder. In line number 12, update the sender's email. In line number 13, give the password of the above email. 
+   eg: user: "email@gmail.com",
+       pass: "password",
 
-4. Open 'peters place' folder and edit the .env file to match your database settings (Username, Password etc.)
+   In line number 37, update the receiver's email.
+   eg: to: "email@gmail.com",
 
-5. Open CMD and go to the 'peters place' folder.
+   Run command "npm start" in the terminal.
 
-6. Run this command.
-	php artisan serve
+3. Open a terminal and navigate inside Web_Client folder.
+   Run command "npm install".
+   Run command "npm start".
 
-7. Server will start on your localhost.
+4. Open folder Sensor_Simulator and open the HTML files.
+
+3. Open both SensorAppRMI project and Desktop App project in Eclipse.
+   Enable "Build Automatically" in Eclipse under "Project" tab.
+
+4. Run SensorServerRMI.java inside SensorAppRMI project as Java Application in Eclipse.
+
+5. Run any Java file in com.interfaces package (SensorDetailsUI.java / ManageSensorUI.java / LoginUI.java) inside DesktopApp project as Java Application in Eclipse.
+
+6. Login as administrator credentials:
 	Username: admin
 	Password: admin123
 
-
-
-== Error Fixing == 
-
-If you get an error saying autoload.php is not found, run these commands in the ''peters place' folder.
-	composer install
-
-If you get an error saying server encryption method is different, run these commands.
-	php artisan key:generate
-	php artisan config:cache
+7. If you add a new sensor to the system, to add the sensor simulator to that sensor, go to Sensor_Simulator folder and copy and paste a HTML file and the relevant JavaScript file. In line number 24, give the sensor ID of the new sensor at the end.
+	eg: If the new sensor's sensor ID is 10,
+       url: "http://localhost:5000/api/sensor/10",
 
 
 
