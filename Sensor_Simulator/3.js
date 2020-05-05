@@ -21,7 +21,7 @@ updateDetails = () => {
 
   // sending a put http request to update the values of co2 level and smoke level
   $.ajax({
-    url: "http://localhost:5000/api/sensor/5",
+    url: "http://localhost:5000/api/sensor/3",
     type: "PUT",
     contentType: "application/json",
     dataType: "json",
