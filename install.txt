@@ -1,1 +1,39 @@
-//
+
+== Installation == 
+
+1. Download & Install XAMPP. (Not needed if you already have PHP installed)
+https://www.apachefriends.org/index.html
+
+2. Download & Install Composer
+https://getcomposer.org/download/
+
+3. Import the Database to MySQL. (Inside the /database/Dump20190927 folder)
+
+4. Open 'peters place' folder and edit the .env file to match your database settings (Username, Password etc.)
+
+5. Open CMD and go to the 'peters place' folder.
+
+6. Run this command.
+	php artisan serve
+
+7. Server will start on your localhost.
+	Username: admin
+	Password: admin123
+
+
+
+== Error Fixing == 
+
+If you get an error saying autoload.php is not found, run these commands in the ''peters place' folder.
+	composer install
+
+If you get an error saying server encryption method is different, run these commands.
+	php artisan key:generate
+	php artisan config:cache
+
+
+
+== Help ==
+
+If any other errors, please open a new issue on Github. 
+https://github.com/TharindaNimnajith/SLIIT_Y3S1_DS_SensorApp
